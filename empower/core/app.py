@@ -68,6 +68,10 @@ class EmpowerApp(object):
 
         self.log.info("Setting control loop interval to %ums", int(value))
         self.__every = int(value)
+        if self.worker:
+            self.worker.stop()
+            self.worker = tornado.ioloop.PeriodicCallback(self.loop, self.every)
+            self.worker.start()
 
     def start(self):
         """Start control loop."""
