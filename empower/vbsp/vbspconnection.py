@@ -240,6 +240,9 @@ class VBSPConnection(object):
             # set connection
             vbs.connection = self
 
+            # send tenants information to VBS
+            self.send_vbs_tenants_info()
+
             # request VBS Cells configuration information
             self.send_vbs_cells_conf_req()
 
@@ -503,6 +506,37 @@ class VBSPConnection(object):
         if "ran_sh_i" in conf_repl:
             self.vbs.ran_sh_i = conf_repl["ran_sh_i"]
 
+    def send_vbs_tenants_info(self):
+        """ Send tenants information to VBS (eNB) """
+
+        for tenant in RUNTIME.tenants.values():
+
+            if tenant.plmn_id == "":
+                continue
+
+            if self.vbs.addr not in tenant.vbses:
+                continue
+
+            ran_sh_ctrl_req = main_pb2.emage_msg()
+
+            enb_id = ether_to_hex(self.vbs.addr)
+            # Transaction identifier is zero by default for single event request
+            create_header(0, enb_id, ran_sh_ctrl_req.head)
+
+            # Creating a single event message to control RAN sharing in VBS
+            se_msg = ran_sh_ctrl_req.se
+
+            ran_sh_ctrl_msg = se_msg.mRAN_sharing_ctrl
+            ran_sh_ctrl_req_msg = ran_sh_ctrl_msg.req
+
+            add_t = ran_sh_ctrl_req_msg.add_t
+            add_t.plmn_id = tenant.plmn_id
+
+            LOG.info("Sending Add tenant to VBS message %s (%u)",
+                     self.vbs.addr, enb_id)
+
+            self.stream_send(ran_sh_ctrl_req)
+
     def send_ues_id_req(self):
         """ Send request for UEs ID registered in VBS """
 
@@ -554,13 +588,15 @@ class VBSPConnection(object):
         eNB_cells_req = main_pb2.emage_msg()
 
         enb_id = ether_to_hex(self.vbs.addr)
-        # Transaction identifier is zero by default for single event requests
-        create_header(0, enb_id, eNB_cells_req.head)
+        # Transaction identifier is 1 by default for schedule event requests
+        create_header(1, enb_id, eNB_cells_req.head)
 
-        # Creating a single event message to fetch cells information in VBS
-        se_msg = eNB_cells_req.se
+        # Creating a schedule event message to fetch cells information in VBS
+        sche_msg = eNB_cells_req.sche
+        sche_msg.interval = 10000
+        sche_msg.action = main_pb2.EA_ADD
 
-        eNB_cells_msg = se_msg.mENB_cells
+        eNB_cells_msg = sche_msg.mENB_cells
         eNB_cells_req_msg = eNB_cells_msg.req
 
         eNB_cells_req_msg.enb_info_types = 0 | configs_pb2.ENB_RAN_SHARING_INFO

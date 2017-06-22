@@ -38,6 +38,7 @@ PRT_VBSP_UES_ID = "mUEs_id"
 PRT_UE_RRC_MEAS_CONF = "mUE_rrc_meas_conf"
 PRT_VBSP_CELLS_CONF = "mENB_cells"
 PRT_CTRL_COMMANDS = "mCtrl_cmds"
+PRT_RAN_SHARE_CTRL = "mRAN_sharing_ctrl"
 
 PRT_TYPES = {PRT_VBSP_BYE: None,
              PRT_VBSP_REGISTER: None,
@@ -46,7 +47,8 @@ PRT_TYPES = {PRT_VBSP_BYE: None,
              PRT_VBSP_HELLO: "hello",
              PRT_VBSP_UES_ID: "ues_id_repl",
              PRT_UE_RRC_MEAS_CONF: None,
-             PRT_VBSP_CELLS_CONF: "vbs_cells_conf_repl"}
+             PRT_VBSP_CELLS_CONF: "vbs_cells_conf_repl",
+             PRT_RAN_SHARE_CTRL: None}
 
 
 PRT_TYPES_HANDLERS = {PRT_VBSP_BYE: [],

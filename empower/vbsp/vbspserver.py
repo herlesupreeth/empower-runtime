@@ -34,6 +34,7 @@ from empower.vbsp import PRT_TYPES_HANDLERS
 from empower.vbsp.vbspconnection import VBSPConnection
 from empower.vbsp.uehandler import UEHandler
 from empower.vbsp.tenantuehandler import TenantUEHandler
+from empower.vbsp.ransharinghandler import RANSharingHandler
 
 from empower.main import RUNTIME
 
@@ -142,6 +143,7 @@ def launch(port=DEFAULT_PORT):
     rest_server.add_handler_class(VBSHandler, server)
     rest_server.add_handler_class(UEHandler, server)
     rest_server.add_handler_class(TenantUEHandler, server)
+    rest_server.add_handler_class(RANSharingHandler, server)
 
     server.log.info("VBSP Server available at %u", server.port)
     return server
