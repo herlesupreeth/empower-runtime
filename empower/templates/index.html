@@ -267,6 +267,43 @@
 
       </div>
 
+      <div id="RBSAllocSidenav" class="sidenav">
+        <div class="container-fluid">
+          <p id="RBSAllocVBSAddr" class="hidden"></p>
+          <div class="row" id="selectBoxRow">
+
+            <div class="col-xs-2" id="divLabel">
+              <label for="cellSelect">Select Cell:</label>
+            </div>
+
+            <div class="col-xs-3">
+              <select class="form-control" data-width="auto" id="cellSelect">
+                <option selected value> --- Select an option --- </option>
+              </select>
+            </div>
+
+            <div class="col-xs-2" id="divLabel">
+              <label for="RATSelect">Resource Allocation Type:</label>
+            </div>
+
+            <div class="col-xs-3">
+              <select class="form-control" data-width="auto" id="RATSelect">
+                <option selected value> --- Select an option --- </option>
+              </select>
+            </div>
+
+          </div>
+          <div class="row" id="rbsSelectRow">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="rbsAllocTable">
+              </table>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary hidden rbsAllocModButton" onclick="modRBSAlloc()"> Apply </button>
+          <button type="submit" class="btn btn-primary" onclick="closeRBSAllocNav()"> Close </button>
+        </div>
+      </div>
+
     {% else %}
 
       <div class="tabPanels">

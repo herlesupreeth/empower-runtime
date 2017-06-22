@@ -1890,7 +1890,7 @@ function loadVBSes(tenant_id) {
                 var rowCount = table.rows.length - 1;
                 var row = table.insertRow(rowCount);
                 var mac = row.insertCell(0);
-                mac.colSpan = 3
+                mac.colSpan = 4
                 mac.style.textAlign = "center"
                 mac.innerHTML = "Empty"
             }
@@ -1923,9 +1923,329 @@ function loadVBSes(tenant_id) {
                 } else {
                     mac.innerHTML += "<div class=\"details\" id=\"vbs_" + stream + "\">Disconnected</div>"
                 }
+                if (!tenant_id && data[stream].ran_sh_i) {
+                    var vbsCtrl = row.insertCell(c++);
+                    vbsCtrl.id = "ctrl_" + data[stream].addr
+                    vbsCtrl.width = "24px"
+                    vbsCtrl.align = "center"
+                    vbsCtrl.innerHTML = "<a href=\"#\" onClick=\"openRBSAllocNav('" + data[stream].addr + "')\"><img width=\"24\" src=\"/static/images/edit.png\" /></a>"
+                }
             }
         },
     });
+}
+
+function modRBSAlloc() {
+
+    var s_cell = $("#cellSelect :selected").val();
+    if (s_cell === "") {
+        alert("Cell not selected");
+        return;
+    }
+
+    var table = document.getElementById("rbsAllocTable");
+
+    var data = new Object();
+    data.version = "1.0";
+    data.operation = "static_t_alloc_DL";
+
+    var params = new Object();
+
+    var rbs_alloc_dl = new Object();
+    rbs_alloc_dl.phy_cell_id = parseInt(s_cell);
+    rbs_alloc_dl.sf = []
+
+    var rowCount = table.rows.length;
+    // All rows will have same column count
+    var colCount = table.rows[0].cells.length;
+
+    for (var sf = 0; sf < colCount - 1; sf++) {
+        var sf_alloc = new Object();
+        sf_alloc.rbs_alloc = []
+        for (var rb = 0; rb < rowCount - 1; rb++) {
+            var val = $("#" + "SF" + sf + "RB" + rb).val();
+            if (val === null || val === "") {
+                sf_alloc.rbs_alloc.push("0");
+            } else {
+                sf_alloc.rbs_alloc.push(val);
+            }
+        }
+        rbs_alloc_dl.sf.push(sf_alloc)
+    }
+
+    params.rbs_alloc_dl = rbs_alloc_dl
+
+    data.params = params;
+
+    var vbs_id = document.getElementById("RBSAllocVBSAddr").text;
+
+    if (vbs_id === null || vbs_id === "") {
+        alert("Unknown VBS");
+        return;
+    }
+
+    url = "/api/v1/vbses/" + vbs_id + "/ran_sharing";
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        cache: false,
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", BASE_AUTH);
+        },
+        statusCode: {
+            201: function (data) {
+
+            },
+            400: function () {
+                alert('Failure');
+            },
+            409: function () {
+                alert('Failure');
+            },
+            500: function () {
+                alert('Failure');
+            }
+        }
+    });
+}
+
+function openRBSAllocNav(vbs) {
+    // Show the RAN sharing controlling element
+    document.getElementById("RBSAllocSidenav").style.width = "100%";
+    // Populate RBS allocation table
+    ranSharingControl(vbs);
+    // Set VBS address
+    document.getElementById("RBSAllocVBSAddr").text = vbs;
+}
+
+function closeRBSAllocNav() {
+
+    document.getElementById("rbsAllocTable").innerHTML = "";
+    $("#cellSelect").val("");
+    // Hide the RAN sharing controlling element
+    document.getElementById("RBSAllocSidenav").style.width = "0";
+}
+
+function ranSharingControl(vbs) {
+    // Fetch tenants information
+    setTimeout(function () {
+        $.ajax({
+            url: '/api/v1/tenants',
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+
+                t_list = [];
+                vbs_data = null;
+
+                for (var t in data) {
+                    for (var v in data[t].vbses) {
+                        if (vbs == data[t].vbses[v].addr &&
+                            data[t].plmn_id != "") {
+                            t_list.push(data[t].plmn_id);
+                            vbs_data = data[t].vbses[v];
+                        }
+                    }
+                }
+
+                if (vbs_data && vbs_data.cells) {
+                    loadCellSelectBox(vbs_data);
+                }
+
+                if (vbs_data && vbs_data.cells && vbs_data.ran_sh_i) {
+                    loadRBSAllocTable(vbs_data, t_list);
+                }
+            },
+        });
+
+        ranSharingControl(vbs);
+
+    }, 1000);
+}
+
+var prev_sel_cell = null;
+var prev_cell_info = null;
+var prev_sched_dl_win = null;
+
+function loadRBSAllocTable(vbs, t_list) {
+
+    if ((vbs === null) && (vbs === undefined)) {
+        return;
+    }
+
+    var s_cell = $("#cellSelect :selected").val();
+    if (s_cell === "") {
+        $(".rbsAllocModButton").addClass("hidden");
+        $("#rbsAllocTable").empty();
+        prev_sel_cell = s_cell;
+        return;
+    }
+
+    var table = document.getElementById("rbsAllocTable");
+
+    var cell = null;
+
+    for (var i in vbs.cells) {
+        if (s_cell == vbs.cells[i].phys_cell_id) {
+            cell = vbs.cells[i];
+            break;
+        }
+    }
+
+    if (!cell || !vbs.ran_sh_i || vbs.ran_sh_i.sched_window_dl == 0) {
+        $(".rbsAllocModButton").addClass("hidden");
+        $("#rbsAllocTable").empty();
+        return;
+    }
+
+    var c_rbs = null;
+
+    if (vbs.ran_sh_i.rbs_alloc_dl) {
+
+        for (var c in vbs.ran_sh_i.rbs_alloc_dl) {
+            if (s_cell == vbs.ran_sh_i.rbs_alloc_dl[c].phys_cell_id) {
+                c_rbs =  vbs.ran_sh_i.rbs_alloc_dl[c].sf;
+                break;
+            }
+        }
+    }
+
+    if (c_rbs) {
+        for (var sf in c_rbs) {
+            for (var rb in c_rbs[sf].rbs_alloc) {
+                var ele = document.getElementById("SF" + sf + "RB" + rb);
+                if (ele !== null && typeof ele !== "undefined") {
+                    if (c_rbs[sf].rbs_alloc[rb] == "-1") {
+                        $("#" + "SF" + sf + "RB" + rb).addClass("hidden");
+                        $("#" + "SF" + sf + "RB" + rb).val("");
+                    } else {
+                        $("#" + "SF" + sf + "RB" + rb).removeClass("hidden");
+                        if ($("#" + "SF" + sf + "RB" + rb).val() == "") {
+                            $("#" + "SF" + sf + "RB" + rb).val(
+                                                    c_rbs[sf].rbs_alloc[rb]);
+                        }
+                        $("#" + "l_SF" + sf + "RB" + rb).text(
+                                                    c_rbs[sf].rbs_alloc[rb]);
+                    }
+                }
+            }
+        }
+    }
+
+    if (prev_cell_info && prev_sel_cell == s_cell &&
+        prev_cell_info.num_rbs_dl == cell.num_rbs_dl &&
+        prev_sched_dl_win == vbs.ran_sh_i.sched_window_dl) {
+        return;
+    }
+
+    if (prev_sel_cell != s_cell) {
+        $(".rbsAllocModButton").addClass("hidden");
+        $("#rbsAllocTable").empty();
+    }
+
+    prev_sel_cell = s_cell;
+    prev_cell_info = cell;
+    prev_sched_dl_win = vbs.ran_sh_i.sched_window_dl;
+
+    for (var rb = 0; rb <= cell.num_rbs_dl; rb++) {
+
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+        var c = 0
+
+        for (var sf = 0; sf <= vbs.ran_sh_i.sched_window_dl; sf++) {
+            var tb_con = row.insertCell(c++);
+            if (rb == 0) {
+                if (sf == 0) {
+                    tb_con.innerHTML = "<td>#</td>";
+                } else {
+                    tb_con.innerHTML = "<td>" + "SF" + (sf - 1) + "</td>";
+                }
+                continue;
+            }
+
+            if (sf == 0) {
+                tb_con.innerHTML = "<td>" + "RB" + (rb - 1) + "</td>";
+            } else {
+                var str_html = "<div class=row>";
+                str_html += "<div class=col-xs-6><select id=" + "SF" + (sf - 1) + "RB" + (rb - 1) + ">";
+                str_html += "<option value=" + "" + ">" + "-- Select --" + "</option>";
+                str_html += "<option value=" + "0" + ">" + "No tenant" + "</option>";
+                for (var t in t_list) {
+                    str_html += "<option value=" + t_list[t] + ">" + t_list[t] + "</option>";
+                }
+                str_html += "</select></div>";
+                str_html += "<div class=col-xs-6><label id=" + "l_SF" + (sf - 1) + "RB" + (rb - 1) + "></label></div></div>";
+                tb_con.innerHTML = str_html;
+            }
+        }
+    }
+    $(".rbsAllocModButton").removeClass("hidden");
+}
+
+function loadCellSelectBox(vbs) {
+
+    if ((vbs !== null) && (vbs !== undefined)) {
+
+        cell_data = [];
+
+        for (var id in vbs.cells) {
+            cell_data.push(vbs.cells[id].phys_cell_id);
+        }
+
+        var selectCellMenu = $('#cellSelect');
+        var cell_values = [];
+
+        $("#cellSelect option").each(function() {
+            cell_values.push($(this).val());
+        });
+
+        /* Check whether the selected cell still exists or not. */
+        var selected_cell = $("#cellSelect :selected").val();
+        if (selected_cell !== "") {
+            var cell_exist_flag = false;
+            for (cell_index in cell_data) {
+                if (selected_cell == cell_data[cell_index]) {
+                    cell_exist_flag = true;
+                    break;
+                }
+            }
+
+            if (!cell_exist_flag) {
+                $("#cellSelect option").filter(function(index) {
+                    return $(this).val() == selected_cell;
+                }).remove();
+                cell_values.splice(cell_values.indexOf(selected_cell), 1);
+            }
+        }
+
+        /* Check if all the ues in the options still exist or not. */
+        $.each(cell_values, function(index, value) {
+            if (value !== ""){
+                var exist_flag = false;
+                for (cell_index in cell_data) {
+                    if (value == cell_data[cell_index]) {
+                        exist_flag = true;
+                        cell_data.splice(cell_index, 1);
+                        break;
+                    }
+                }
+                if (!exist_flag){
+                    $("#cellSelect option").filter(function(index) {
+                        return $(this).val() == value;
+                    }).remove();
+                }
+            }
+        });
+
+        $.each(cell_data, function(index, cell) {
+            selectCellMenu.append("<option value= "+ cell +">" + cell + "</option>");
+        });
+    }
 }
 
 function removeVNSP(mac, tenant_id) {
