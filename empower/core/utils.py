@@ -30,8 +30,8 @@ def rnti_to_ue_id(rnti, enb_id):
 
     rnti_tuple = hex_to_ether(rnti).to_str().split(":")
     enb_id_tuple = hex_to_ether(enb_id).to_str().split(":")
-    x = ("0", "0", rnti_tuple[4], rnti_tuple[5],
-         enb_id_tuple[4], enb_id_tuple[5])
+    x = ("0", "0", enb_id_tuple[4], enb_id_tuple[5],
+            rnti_tuple[4], rnti_tuple[5])
 
     return EtherAddress(":".join(x))
 
