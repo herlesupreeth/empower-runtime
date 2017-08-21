@@ -252,7 +252,7 @@ function updateSignalGraph() {
                         .style("top", (d3.event.pageY - 28) + "px");
                 } else {
                     tp_div .html("RSSI: " + d.rssi)
-                        .style("left", (d3.event.pageX) + "px")
+                        .style("left", (d3.event.pageX + 18) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
                 }
             });
@@ -295,7 +295,7 @@ function updateSignalGraph() {
                     .duration(200)
                     .style("opacity", .9);
                 tp_div .html(d.tooltip + ": " + d.node_id)
-                    .style("left", (d3.event.pageX) + "px")
+                    .style("left", (d3.event.pageX + 18) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             });
 
@@ -337,7 +337,7 @@ function updateSignalGraph() {
                     .duration(200)
                     .style("opacity", .9);
                 tp_div .html(d.tooltip + ": " + d.node_id)
-                    .style("left", (d3.event.pageX) + "px")
+                    .style("left", (d3.event.pageX + 18) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             });
 
@@ -380,7 +380,7 @@ function updateSignalGraph() {
                 .duration(200)
                 .style("opacity", .9);
             tp_div .html(d.tooltip + ": " + d.node_id + "(" + d.mac + ")")
-                .style("left", (d3.event.pageX) + "px")
+                .style("left", (d3.event.pageX + 18) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         });
 
