@@ -328,7 +328,7 @@ class VBSPConnection(object):
 
                         ue_rrc_meas_confs(tenant_id=ue.tenant.tenant_id,
                                           ue=ue.addr,
-                                          meas_req=conf_req)
+                                          conf_req=conf_req)
 
                         # Trigger UE RRC stats for the operating frequency of VBS
                         from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
