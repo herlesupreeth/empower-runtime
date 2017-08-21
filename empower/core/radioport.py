@@ -17,8 +17,8 @@
 
 """EmPOWER Radio Port."""
 
-from empower.core.resourcepool import build_block
 from empower.core.resourcepool import ResourceBlock
+from empower.core.resourcepool import BT_HT20
 
 
 class RadioPort():
@@ -27,20 +27,7 @@ class RadioPort():
     A port represents the properties of an assignment LVAP <-> ResourceBlock.
     The PortProp class extends the dictornary overriding the set method in
     order to send a Port Update message when the port is changed and an ADD/
-    DEL LVAP when a port is added/removed. Examples:
-
-      lvap.block = block
-
-    pool is a ResourcePool object. This results effectivelly in:
-
-      for block in pool:
-        lvap.block[block] = Port(lvap, block)
-
-    Similarly:
-
-      lvap.block[block] = port
-
-    is used to update a port configuration
+    DEL LVAP when a port is added/removed.
 
     Attributes:
 
@@ -53,11 +40,26 @@ class RadioPort():
         self._lvap = lvap
         self._block = block
 
+        txp = self._block.tx_policies[self._lvap.addr]
+
+        if self._block.channel > 14:
+            txp._mcs = [6.0, 9.0, 12.0, 18.0, 24.0, 36.0, 48.0, 54.0]
+        else:
+            txp._mcs = [1.0, 2.0, 5.5, 11.0,
+                        6.0, 9.0, 12.0, 18.0, 24.0, 36.0, 48, 54.0]
+
+        if self._lvap.supported_band == BT_HT20:
+            txp._ht_mcs = \
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        else:
+            txp._ht_mcs = []
+
     def to_dict(self):
         """ Return a JSON-serializable dictionary representing the Port """
 
         return {'no_ack': self.no_ack,
                 'mcs': self.mcs,
+                'ht_mcs': self.ht_mcs,
                 'rts_cts': self.rts_cts}
 
     @property
@@ -162,16 +164,12 @@ class RadioPortProp(dict):
     def delitem(self, key):
         """Notice this will del the item without sending out any message."""
 
-        key = build_block(key)
-
         if not isinstance(key, ResourceBlock):
             raise KeyError("Expected ResourceBlock, got %s" % type(key))
 
         dict.__delitem__(self, key)
 
     def __delitem__(self, key):
-
-        key = build_block(key)
 
         if not isinstance(key, ResourceBlock):
             raise KeyError("Expected ResourceBlock, got %s" % type(key))
@@ -189,8 +187,6 @@ class RadioPortProp(dict):
 
     def setitem(self, key, value):
         """Notice this will set the item without sending out any message."""
-
-        key = build_block(key)
 
         if not isinstance(key, ResourceBlock):
             raise KeyError("Expected ResourceBlock, got %s" % type(key))
@@ -216,8 +212,6 @@ class RadioPortProp(dict):
             dict.__setitem__(self, key, value)
 
     def __setitem__(self, key, value):
-
-        key = build_block(key)
 
         if not isinstance(key, ResourceBlock):
             raise KeyError("Expected ResourceBlock, got %s" % type(key))
@@ -249,8 +243,6 @@ class RadioPortProp(dict):
             key.radio.connection.send_set_port(value.tx_policy)
 
     def __getitem__(self, key):
-
-        key = build_block(key)
 
         if not isinstance(key, ResourceBlock):
             raise KeyError("Expected ResourceBlock, got %s" % type(key))

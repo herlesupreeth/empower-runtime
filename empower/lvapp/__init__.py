@@ -52,6 +52,8 @@ PT_CAPS = 0x16
 PT_ADD_VAP = 0x31
 PT_DEL_VAP = 0x32
 PT_STATUS_VAP = 0x33
+PT_ADD_LVAP_RESPONSE = 0x50
+PT_DEL_LVAP_RESPONSE = 0x51
 
 HEADER = Struct("header", UBInt8("version"),
                 UBInt8("type"),
@@ -76,13 +78,15 @@ PROBE_REQUEST = Struct("probe_request", UBInt8("version"),
                        Bytes("hwaddr", 6),
                        UBInt8("channel"),
                        UBInt8("band"),
-                       Bytes("ssid", lambda ctx: ctx.length - 30))
+                       UBInt8("supported_band"),
+                       Bytes("ssid", lambda ctx: ctx.length - 31))
 
 PROBE_RESPONSE = Struct("probe_response", UBInt8("version"),
                         UBInt8("type"),
                         UBInt32("length"),
                         UBInt32("seq"),
-                        Bytes("sta", 6))
+                        Bytes("sta", 6),
+                        Bytes("ssid", lambda ctx: ctx.length - 16))
 
 AUTH_REQUEST = Struct("auth_request", UBInt8("version"),
                       UBInt8("type"),
@@ -109,7 +113,8 @@ ASSOC_REQUEST = \
            Bytes("hwaddr", 6),
            UBInt8("channel"),
            UBInt8("band"),
-           Bytes("ssid", lambda ctx: ctx.length - 36))
+           UBInt8("supported_band"),
+           Bytes("ssid", lambda ctx: ctx.length - 37))
 
 ASSOC_RESPONSE = Struct("assoc_response", UBInt8("version"),
                         UBInt8("type"),
@@ -121,7 +126,7 @@ ADD_LVAP = Struct("add_lvap", UBInt8("version"),
                   UBInt8("type"),
                   UBInt32("length"),
                   UBInt32("seq"),
-                  UBInt16("group"),
+                  UBInt32("module_id"),
                   BitStruct("flags", Padding(13),
                             Bit("set_mask"),
                             Bit("associated"),
@@ -130,6 +135,7 @@ ADD_LVAP = Struct("add_lvap", UBInt8("version"),
                   Bytes("hwaddr", 6),
                   UBInt8("channel"),
                   UBInt8("band"),
+                  UBInt8("supported_band"),
                   Bytes("sta", 6),
                   Bytes("encap", 6),
                   Bytes("net_bssid", 6),
@@ -140,7 +146,13 @@ DEL_LVAP = Struct("del_lvap", UBInt8("version"),
                   UBInt8("type"),
                   UBInt32("length"),
                   UBInt32("seq"),
-                  Bytes("sta", 6))
+                  UBInt32("module_id"),
+                  Bytes("sta", 6),
+                  Bytes("target_hwaddr", 6),
+                  UBInt8("target_channel"),
+                  UBInt8("tagert_band"),
+                  UBInt8("csa_switch_mode"),
+                  UBInt8("csa_switch_count"))
 
 STATUS_LVAP = Struct("status_lvap", UBInt8("version"),
                      UBInt8("type"),
@@ -157,6 +169,7 @@ STATUS_LVAP = Struct("status_lvap", UBInt8("version"),
                      Bytes("hwaddr", 6),
                      UBInt8("channel"),
                      UBInt8("band"),
+                     UBInt8("supported_band"),
                      Bytes("net_bssid", 6),
                      Bytes("lvap_bssid", 6),
                      SSIDS)
@@ -227,7 +240,7 @@ ADD_VAP = Struct("add_vap", UBInt8("version"),
                  Bytes("net_bssid", 6),
                  Bytes("ssid", lambda ctx: ctx.length - 24))
 
-DEL_VAP = Struct("add_vap", UBInt8("version"),
+DEL_VAP = Struct("del_vap", UBInt8("version"),
                  UBInt8("type"),
                  UBInt32("length"),
                  UBInt32("seq"),
@@ -243,6 +256,15 @@ STATUS_VAP = Struct("status_vap", UBInt8("version"),
                     UBInt8("band"),
                     Bytes("net_bssid", 6),
                     Bytes("ssid", lambda ctx: ctx.length - 30))
+
+ADD_DEL_LVAP_RESPONSE = Struct("add_del_lvap", UBInt8("version"),
+                               UBInt8("type"),
+                               UBInt32("length"),
+                               UBInt32("seq"),
+                               Bytes("wtp", 6),
+                               Bytes("sta", 6),
+                               UBInt32("module_id"),
+                               UBInt32("status"))
 
 PT_TYPES = {PT_BYE: None,
             PT_REGISTER: None,
@@ -261,7 +283,9 @@ PT_TYPES = {PT_BYE: None,
             PT_CAPS: CAPS,
             PT_SET_PORT: SET_PORT,
             PT_STATUS_PORT: STATUS_PORT,
-            PT_STATUS_VAP: STATUS_VAP}
+            PT_STATUS_VAP: STATUS_VAP,
+            PT_ADD_LVAP_RESPONSE: ADD_DEL_LVAP_RESPONSE,
+            PT_DEL_LVAP_RESPONSE: ADD_DEL_LVAP_RESPONSE}
 
 PT_TYPES_HANDLERS = {PT_BYE: [],
                      PT_REGISTER: [],
@@ -280,4 +304,6 @@ PT_TYPES_HANDLERS = {PT_BYE: [],
                      PT_CAPS: [],
                      PT_SET_PORT: [],
                      PT_STATUS_PORT: [],
-                     PT_STATUS_VAP: []}
+                     PT_STATUS_VAP: [],
+                     PT_ADD_LVAP_RESPONSE: [],
+                     PT_DEL_LVAP_RESPONSE: []}

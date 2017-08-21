@@ -36,6 +36,9 @@ def ofmatch_s2d(match):
 
     key = {}
 
+    if match == "":
+        return key
+
     for token in match.split(","):
         key_t, value_t = token.split("=")
 
@@ -43,9 +46,18 @@ def ofmatch_s2d(match):
             value_t = int(value_t)
 
         if key_t == 'dl_type':
+            value_t = int(value_t, 16)
+
+        if key_t == 'in_port':
             value_t = int(value_t)
 
         if key_t == 'nw_proto':
+            value_t = int(value_t)
+
+        if key_t == 'tp_dst':
+            value_t = int(value_t)
+
+        if key_t == 'tp_src':
             value_t = int(value_t)
 
         key[key_t] = value_t
@@ -63,7 +75,6 @@ class VirtualPort(object):
         self.ovs_port_id = phy_port.port_id
         self.hwaddr = phy_port.hwaddr
         self.iface = phy_port.iface
-
         self.next = dict()
 
     def clear(self):

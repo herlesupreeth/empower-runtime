@@ -230,64 +230,24 @@ class CQM(dict):
             return inf
 
 
-def build_block(block):
-    """Build a new resource block from another block or from a tuple."""
+class ResourcePool(list):
+    """ EmPOWER resource pool.
 
-    if isinstance(block, ResourceBlock):
-
-        requested = block
-
-    elif isinstance(block, tuple):
-
-        if len(tuple) < 3:
-            raise ValueError("Invalid tuple")
-
-        from empower.main import RUNTIME
-
-        wtp = RUNTIME.wtps[EtherAddress(block[0])]
-        hwaddr = EtherAddress(block[1])
-        channel = block[2]
-        band = REVERSE_BANDS[block[3]]
-        requested = ResourceBlock(wtp, hwaddr, channel, band)
-
-    else:
-
-        raise ValueError("Expected ResourceBlock or tuple, got %s",
-                         type(block))
-
-    for supported in requested.radio.supports:
-        if supported == requested:
-            return supported
-
-    raise KeyError(requested)
-
-
-class ResourcePool(set):
-    """ Resource Pool class.
-
-    A resource block represents the minimum allocation element in a EmPOWER
-    network. It typically consists of a wifi channel and the number of
-    streams. However it could also consist of multiple bands (for example 160
-    MHz channel obtained by aggregating two 80 MHz channels in 802.11ac
-    networks).
-
-    The class Overrides the set object's "and" method for ResourceBlock
-    objects by excluding the Resource Block address form the matching.from
+    This extends the list in order to add a few filtering and sorting methods
     """
 
-    def __init__(self, *args, **kwds):
-        super(ResourcePool, self).__init__(*args, **kwds)
+    def sortByRssi(self, addr):
+        blocks = sorted(self, key=lambda x: x.ucqm[addr]['mov_rssi'],
+                        reverse=True)
+        return ResourcePool(blocks)
 
-    def __and__(self, other):
-        result = ResourcePool()
-        for rblock in self:
-            for rblock_other in other:
-                if rblock.channel != rblock_other.channel:
-                    continue
-                if rblock.band > rblock_other.band:
-                    continue
-                result.add(rblock)
-        return result
+    def first(self):
+        block = list.__getitem__(self, 0)
+        return ResourcePool([block])
+
+    def last(self):
+        selected = list.__getitem__(self, -1)
+        return ResourcePool([block])
 
 
 class ResourceBlock(object):
@@ -319,6 +279,7 @@ class ResourceBlock(object):
         self._band = band
         self.ucqm = CQM()
         self.ncqm = CQM()
+        self.busyness = None
         self.tx_policies = TxPolicyProp(self)
         self._supports = set()
         self._ht_supports = set()
@@ -432,6 +393,7 @@ class ResourceBlock(object):
                 'ht_supports': sorted(self.ht_supports),
                 'tx_policies': tx_policies,
                 'band': BANDS[self.band],
+                'busyness': self.busyness,
                 'ucqm': {str(k): v for k, v in self.ucqm.items()},
                 'ncqm': {str(k): v for k, v in self.ncqm.items()}}
 

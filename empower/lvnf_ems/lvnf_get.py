@@ -94,18 +94,22 @@ class LVNFGet(Module):
         """Send out handler requests."""
 
         if self.tenant_id not in RUNTIME.tenants:
+            self.log.info("Tenant %s not found", self.tenant_id)
+            self.unload()
             return
 
-        tenant = RUNTIME.tenants[self.tenant_id]
+        lvnfs = RUNTIME.tenants[self.tenant_id].lvnfs
 
-        if self.lvnf not in tenant.lvnfs:
+        if self.lvnf not in lvnfs:
             self.log.error("LVNF %s not found.", self.lvnf)
             self.unload()
             return
 
-        lvnf = tenant.lvnfs[self.lvnf]
+        lvnf = lvnfs[self.lvnf]
 
         if not lvnf.cpp.connection:
+            self.log.info("CPP %s not connected", lvnf.cpp.addr)
+            self.unload()
             return
 
         handler_req = {'module_id': self.module_id,

@@ -38,7 +38,9 @@ from empower.vbsp.messages import main_pb2
 from empower.vbsp.messages import configs_pb2
 from empower.core.utils import hex_to_ether
 from empower.core.utils import ether_to_hex
+from empower.core.utils import rnti_to_ue_id
 from empower.core.ue import UE
+from empower.datatypes.etheraddress import EtherAddress
 
 from empower.main import RUNTIME
 
@@ -137,8 +139,6 @@ class VBSPConnection(object):
 
         size = message.ByteSize()
 
-        print(message.__str__())
-
         size_bytes = (socket.htonl(size)).to_bytes(4, byteorder=self.endian)
         send_buff = serialize_message(message)
         buff = size_bytes + send_buff
@@ -172,7 +172,6 @@ class VBSPConnection(object):
             self.seq = deserialized_msg.head.seq
 
             # print(deserialized_msg.__str__())
-
             self._trigger_message(deserialized_msg)
             self._wait()
 
@@ -269,6 +268,8 @@ class VBSPConnection(object):
             None
         """
 
+        enb_id = main_msg.head.b_id
+
         active_ues = {}
         inactive_ues = {}
 
@@ -282,189 +283,83 @@ class VBSPConnection(object):
         # List of active UEs
         if "active_ue_id" in ues_id_msg_repl:
             for ue in ues_id_msg_repl["active_ue_id"]:
-                active_ues[(self.vbs.addr, ue["rnti"])] = {}
+                addr = rnti_to_ue_id(ue["rnti"], enb_id)
+                active_ues[addr] = {}
+                active_ues[addr]["addr"] = addr
+                active_ues[addr]["rnti"] = ue["rnti"]
                 if "imsi" in ue:
-                    active_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = \
-                                                                ue["imsi"]
-                else:
-                    active_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = ""
+                    active_ues[addr]["imsi"] = int(ue["imsi"])
                 if "plmn_id" in ue:
-                    active_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = \
-                                                            ue["plmn_id"]
-                else:
-                    active_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = ""
+                    active_ues[addr]["plmn_id"] = ue["plmn_id"]
 
         # List of inactive UEs
         if "inactive_ue_id" in ues_id_msg_repl:
             for ue in ues_id_msg_repl["inactive_ue_id"]:
-                inactive_ues[(self.vbs.addr, ue["rnti"])] = {}
+                addr = rnti_to_ue_id(ue["rnti"], enb_id)
+                inactive_ues[addr] = {}
+                inactive_ues[addr]["addr"] = addr
+                inactive_ues[addr]["rnti"] = ue["rnti"]
                 if "imsi" in ue:
-                    inactive_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = \
-                                                                ue["imsi"]
-                else:
-                    inactive_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = ""
+                    inactive_ues[addr]["imsi"] = int(ue["imsi"])
                 if "plmn_id" in ue:
-                    inactive_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = \
-                                                            ue["plmn_id"]
-                else:
-                    inactive_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = ""
+                    inactive_ues[addr]["plmn_id"] = ue["plmn_id"]
 
-        for vbs_id, rnti in active_ues.keys():
+        for new_ue in active_ues.values():
 
-            ue_id = (self.vbs.addr, rnti)
+            if new_ue["addr"] not in RUNTIME.ues:
 
-            if ue_id not in RUNTIME.ues:
-                new_ue = UE(ue_id, ue_id[1], self.vbs)
-                RUNTIME.ues[ue_id] = new_ue
+                ue = UE(new_ue["addr"], new_ue["rnti"], self.vbs)
 
-            ue = RUNTIME.ues[ue_id]
+                if "imsi" in new_ue:
+                    ue.imsi = new_ue["imsi"]
 
-            imsi = active_ues[ue_id]["imsi"]
-            plmn_id = active_ues[ue_id]["plmn_id"]
+                if "plmn_id" in new_ue:
 
-            # Setting IMSI of UE
-            ue.imsi = imsi
+                    ue.tenant = \
+                        RUNTIME.load_tenant_by_plmn_id(new_ue["plmn_id"])
 
-            if ue.plmn_id == "" and plmn_id != "":
+                    if ue.tenant:
+                        # Create a trigger for reporting RRC measurements config
+                        from empower.ue_confs.ue_rrc_meas_confs import ue_rrc_meas_confs
 
-                # Setting tenant
-                ue.tenant = RUNTIME.load_tenant_by_plmn_id(plmn_id)
-
-                if ue.tenant:
-
-                    # Adding UE to tenant
-                    LOG.info("Adding %s to tenant %s", ue.addr,
-                             ue.tenant.plmn_id)
-                    ue.tenant.ues[ue.addr] = ue
-
-                    # Raise UE join
-                    self.server.send_ue_join_message_to_self(ue)
-
-                    # Create a trigger for reporting RRC measurements config
-                    from empower.ue_confs.ue_rrc_meas_confs import ue_rrc_meas_confs
-
-                    conf_req = {
-                        "event_type": "trigger"
-                    }
-
-                    ue_rrc_meas_confs(tenant_id=ue.tenant.tenant_id,
-                                      vbs=ue.vbs.addr,
-                                      ue=ue.rnti,
-                                      conf_req=conf_req)
-
-                    # Trigger UE RRC stats for the operating frequency of UE
-                    from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
-
-                    if ue.vbs.cells and len(ue.vbs.cells) > 0 and \
-                        "carrier_freq" in ue.vbs.cells[0] and \
-                        "num_rbs_dl" in ue.vbs.cells[0] and \
-                        ue.vbs.cells[0]["num_rbs_dl"] > 0:
-                        # UE is assumed to be attached to Cell 0.
-                        meas_req = {
-                            "rat_type": "EUTRA",
-                            "cell_to_measure": [],
-                            "blacklist_cells": [],
-                            "bandwidth": ue.vbs.cells[0]["num_rbs_dl"],
-                            "carrier_freq": ue.vbs.cells[0]["carrier_freq"],
-                            "report_type": "periodical_ref_signal",
-                            "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
-                            "trigger_quantity": "RSRP",
-                            "num_of_reports": "infinite",
-                            "max_report_cells": 3,
+                        conf_req = {
+                            "event_type": "trigger"
                         }
 
-                        ue_rrc_stats(tenant_id=ue.tenant.tenant_id,
-                                      vbs=ue.vbs.addr,
-                                      ue=ue.rnti,
-                                      meas_req=meas_req)
+                        ue_rrc_meas_confs(tenant_id=ue.tenant.tenant_id,
+                                          ue=ue.addr,
+                                          meas_req=conf_req)
 
-            if ue.plmn_id != "" and plmn_id == "":
+                        # Trigger UE RRC stats for the operating frequency of VBS
+                        from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
 
-                # Raise UE leave
-                self.server.send_ue_leave_message_to_self(ue)
+                        if ue.vbs.cells and len(ue.vbs.cells) > 0 and \
+                            "carrier_freq" in ue.vbs.cells[0] and \
+                            "num_rbs_dl" in ue.vbs.cells[0] and \
+                            ue.vbs.cells[0]["num_rbs_dl"] > 0:
+                            # UE is assumed to be attached to Cell 0.
+                            meas_req = {
+                                "rat_type": "EUTRA",
+                                "cell_to_measure": [],
+                                "blacklist_cells": [],
+                                "bandwidth": ue.vbs.cells[0]["num_rbs_dl"],
+                                "carrier_freq": ue.vbs.cells[0]["carrier_freq"],
+                                "report_type": "periodical_ref_signal",
+                                "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
+                                "trigger_quantity": "RSRP",
+                                "num_of_reports": "infinite",
+                                "max_report_cells": 3,
+                            }
 
-                # Removing UE from tenant
-                LOG.info("Removing %s from tenant %s", ue.addr,
-                         ue.tenant.plmn_id)
-                del ue.tenant.ues[ue.addr]
+                            ue_rrc_stats(tenant_id=ue.tenant.tenant_id,
+                                          ue=ue.addr,
+                                          meas_req=meas_req)
 
-                # Resetting tenant
-                ue.tenant = None
+                RUNTIME.ues[new_ue["addr"]] = ue
 
-        existing_ues = []
-        existing_ues.extend(RUNTIME.ues.keys())
-
-        for ue_addr in existing_ues:
-
-            if ue_addr[0] != hex_to_ether(main_msg.head.b_id):
-                continue
-
-            if ue_addr not in active_ues:
-                RUNTIME.remove_ue(ue_addr)
-
-    def _handle_rrc_meas_conf_repl(self, main_msg):
-        """ Handle an incoming UE's RRC Measurements configuration reply
-
-        Args:
-            message, a message containing RRC Measurements configuration in UE
-        Returns:
-            None
-        """
-
-        event_type = main_msg.WhichOneof("event_types")
-        msg = protobuf_to_dict(main_msg)
-        rrc_m_conf_repl = msg[event_type][PRT_UE_RRC_MEAS_CONF]["repl"]
-
-        rnti = rrc_m_conf_repl["rnti"]
-
-        ue_id = (self.vbs.addr, rnti)
-
-        if ue_id not in RUNTIME.ues:
-            return
-
-        ue = RUNTIME.ues[ue_id]
-
-        if rrc_m_conf_repl["status"] != configs_pb2.CREQS_SUCCESS:
-            return
-
-        del rrc_m_conf_repl["rnti"]
-        del rrc_m_conf_repl["status"]
-
-        if "ue_rrc_state" in rrc_m_conf_repl:
-            ue.rrc_state = rrc_m_conf_repl["ue_rrc_state"]
-            del rrc_m_conf_repl["ue_rrc_state"]
-
-        if "capabilities" in rrc_m_conf_repl:
-            ue.capabilities = rrc_m_conf_repl["capabilities"]
-            del rrc_m_conf_repl["capabilities"]
-
-        # Trigger UE RRC stats for the operating frequency of UE
-        from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
-
-        if "freq" in rrc_m_conf_repl and \
-            ue.vbs.cells and len(ue.vbs.cells) > 0 and \
-            "num_rbs_dl" in ue.vbs.cells[0] and \
-            ue.vbs.cells[0]["num_rbs_dl"] > 0:
-            # UE is assumed to be attached to Cell 0.
-            meas_req = {
-                "rat_type": "EUTRA",
-                "cell_to_measure": [],
-                "blacklist_cells": [],
-                "bandwidth": ue.vbs.cells[0]["num_rbs_dl"],
-                "carrier_freq": rrc_m_conf_repl["freq"],
-                "report_type": "periodical_ref_signal",
-                "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
-                "trigger_quantity": "RSRP",
-                "num_of_reports": "infinite",
-                "max_report_cells": 3,
-            }
-
-            ue_rrc_stats(tenant_id=ue.tenant.tenant_id,
-                          vbs=ue.vbs.addr,
-                          ue=ue.rnti,
-                          meas_req=meas_req)
-
-        ue.rrc_meas_config = rrc_m_conf_repl
+        for addr in list(RUNTIME.ues.keys()):
+            if addr not in active_ues:
+                RUNTIME.remove_ue(addr)
 
     def _handle_vbs_cells_conf_repl(self, main_msg):
         """ Handle an incoming VBS cells configuration reply
@@ -605,29 +500,6 @@ class VBSPConnection(object):
                  self.vbs.addr, enb_id)
 
         self.stream_send(eNB_cells_req)
-
-    def send_rrc_meas_conf_req(self, ue):
-        """ Sends a request for RRC measurements configuration of UE """
-
-        rrc_m_conf_req = main_pb2.emage_msg()
-        enb_id = ether_to_hex(self.vbs.addr)
-
-        # Transaction identifier is one by default
-        create_header(1, enb_id, rrc_m_conf_req.head)
-
-        # Creating a trigger message to fetch UE RNTIs
-        trigger_msg = rrc_m_conf_req.te
-        trigger_msg.action = main_pb2.EA_ADD
-
-        rrc_m_conf_msg = trigger_msg.mUE_rrc_meas_conf
-        rrc_m_conf_req_msg = rrc_m_conf_msg.req
-
-        rrc_m_conf_req_msg.rnti = ue.rnti
-
-        LOG.info("Sending UEs RRC measurement config request to VBS %s (%u)",
-                 self.vbs.addr, enb_id)
-
-        self.stream_send(rrc_m_conf_req)
 
     def _wait(self):
         """ Wait for incoming packets on signalling channel """

@@ -15,14 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Basic mobility manager."""
+"""Reactive mobility manager."""
 
 from empower.core.app import EmpowerApp
 from empower.core.app import DEFAULT_PERIOD
 
 
-class SimpleMobilityManager(EmpowerApp):
-    """Basic mobility manager.
+class ProactiveMobilityManager(EmpowerApp):
+    """Reactive mobility manager.
 
     Command Line Parameters:
 
@@ -31,7 +31,7 @@ class SimpleMobilityManager(EmpowerApp):
 
     Example:
 
-        ./empower-runtime.py apps.simplemobilitymanager.simplemobilitymanager \
+        ./empower-runtime.py apps.mobilitymanager.proactivemm \
             --tenant_id=52313ecb-9d00-4b7d-b873-b55d3d9ada26
     """
 
@@ -44,6 +44,7 @@ class SimpleMobilityManager(EmpowerApp):
     def wtp_up_callback(self, wtp):
         """Called when a new WTP connects to the controller."""
 
+        # Start polling WTP
         for block in wtp.supports:
             self.ucqm(block=block, every=self.every)
 
@@ -51,20 +52,10 @@ class SimpleMobilityManager(EmpowerApp):
         """ Periodic job. """
 
         for lvap in self.lvaps():
-
-            pool = self.blocks()
-            valid = pool & lvap.supported
-
-            if not valid:
-                return
-
-            new_block = max(valid, key=lambda x: x.ucqm[lvap.addr]['mov_rssi'])
-            self.log.info("LVAP %s -> %s" % (lvap.addr, new_block))
-
-            lvap.scheduled_on = new_block
+            lvap.blocks = self.blocks().sortByRssi(lvap.addr).first()
 
 
 def launch(tenant_id, every=DEFAULT_PERIOD):
     """ Initialize the module. """
 
-    return SimpleMobilityManager(tenant_id=tenant_id, every=every)
+    return ProactiveMobilityManager(tenant_id=tenant_id, every=every)

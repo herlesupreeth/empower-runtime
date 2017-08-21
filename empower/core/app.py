@@ -17,9 +17,11 @@
 
 """EmPOWER base app class."""
 
+import uuid
 import tornado.ioloop
 import empower.logger
 
+from empower.core.lvnf import LVNF
 from empower.core.resourcepool import ResourcePool
 
 from empower.main import RUNTIME
@@ -40,9 +42,8 @@ class EmpowerApp(object):
         self.worker = None
 
         for param in kwargs:
-            if hasattr(self, param):
-                setattr(self, param, kwargs[param])
-                self.params.append(param)
+            setattr(self, param, kwargs[param])
+            self.params.append(param)
 
     @property
     def tenant_id(self):
@@ -143,17 +144,16 @@ class EmpowerApp(object):
 
         return RUNTIME.tenants[self.tenant_id].lvaps[addr]
 
-    def blocks(self, lvap=None, limit=None):
-        """Return all blocks in this Tenant."""
+    def blocks(self):
+        """Return all ResourseBlocks in this Tenant."""
 
         # Initialize the Resource Pool
         pool = ResourcePool()
 
-        # Update the Resource Pool with all
-        # the available Resourse Blocks
+        # Update the pool with all the available ResourseBlocks
         for wtp in self.wtps():
             for block in wtp.supports:
-                pool.add(block)
+                pool.append(block)
 
         return pool
 
@@ -213,3 +213,28 @@ class EmpowerApp(object):
             return None
 
         return RUNTIME.tenants[self.tenant_id].lvnfs[addr]
+
+    def spawn_lvnf(self, image, cpp, lvnf_id=None):
+        """Spawn a new LVNF on the specified CPP."""
+
+        if not lvnf_id:
+            lvnf_id = uuid.uuid4()
+        else:
+            lvnf_id = uuid.UUID(lvnf_id)
+
+        tenant = RUNTIME.tenants[self.tenant_id]
+
+        if lvnf_id in tenant.lvnfs:
+            raise KeyError("LVNF found %s", lvnf_id)
+
+        lvnf = LVNF(lvnf_id=lvnf_id,
+                    tenant_id=self.tenant_id,
+                    image=image,
+                    cpp=cpp)
+
+        lvnf.start()
+
+        # the LVNF is added to the list because in this way its state is
+        # maintained as spawning, then as a result of the lvnf status message
+        # this can change to running or stopped.
+        tenant.lvnfs[lvnf_id] = lvnf

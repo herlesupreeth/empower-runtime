@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Basic mobility manager."""
+"""Proactive mobility manager."""
 
 from empower.core.app import EmpowerApp
 from empower.core.app import DEFAULT_PERIOD
@@ -24,8 +24,8 @@ from empower.core.app import DEFAULT_PERIOD
 DEFAULT_LIMIT = -30
 
 
-class MobilityManager(EmpowerApp):
-    """Basic mobility manager.
+class ReactiveMobilityManager(EmpowerApp):
+    """Proactive mobility manager.
 
     Command Line Parameters:
 
@@ -35,13 +35,15 @@ class MobilityManager(EmpowerApp):
 
     Example:
 
-        ./empower-runtime.py apps.mobilitymanager.mobilitymanager \
+        ./empower-runtime.py apps.mobilitymanager.reactivemm \
             --tenant_id=52313ecb-9d00-4b7d-b873-b55d3d9ada26
     """
 
     def __init__(self, **kwargs):
-        self.__limit = DEFAULT_LIMIT
+
         EmpowerApp.__init__(self, **kwargs)
+
+        self.__limit = DEFAULT_LIMIT
 
         # Register an wtp up event
         self.wtpup(callback=self.wtp_up_callback)
@@ -52,14 +54,9 @@ class MobilityManager(EmpowerApp):
     def wtp_up_callback(self, wtp):
         """Called when a new WTP connects to the controller."""
 
+        # Start polling the WTP
         for block in wtp.supports:
-
             self.ucqm(block=block, every=self.every)
-
-            self.busyness_trigger(value=10,
-                                  relation='GT',
-                                  block=block,
-                                  callback=self.high_occupancy)
 
     def lvap_join_callback(self, lvap):
         """Called when an joins the network."""
@@ -68,35 +65,6 @@ class MobilityManager(EmpowerApp):
                   value=self.limit,
                   relation='LT',
                   callback=self.low_rssi)
-
-    def high_occupancy(self, trigger):
-        """Call when channel is too busy."""
-
-        self.log.info("Block %s busyness %f" %
-                      (trigger.block, trigger.event['current']))
-
-    def handover(self, lvap):
-        """ Handover the LVAP to a WTP with
-        an RSSI higher that -65dB. """
-
-        self.log.info("Running handover...")
-
-        pool = self.blocks()
-        matches = pool & lvap.supported
-
-        if not matches:
-            return
-
-        valid = [block for block in matches
-                 if block.ucqm[lvap.addr]['mov_rssi'] >= self.limit]
-
-        if not valid:
-            return
-
-        new_block = max(valid, key=lambda x: x.ucqm[lvap.addr]['mov_rssi'])
-        self.log.info("LVAP %s setting new block %s" % (lvap.addr, new_block))
-
-        lvap.scheduled_on = new_block
 
     @property
     def limit(self):
@@ -129,18 +97,12 @@ class MobilityManager(EmpowerApp):
         if not lvap:
             return
 
-        self.handover(lvap)
-
-    def loop(self):
-        """ Periodic job. """
-
-        # Handover every active LVAP to
-        # the best WTP
-        for lvap in self.lvaps():
-            self.handover(lvap)
+        lvap.blocks = self.blocks().sortByRssi(lvap.addr).first()
 
 
 def launch(tenant_id, limit=DEFAULT_LIMIT, every=DEFAULT_PERIOD):
     """ Initialize the module. """
 
-    return MobilityManager(tenant_id=tenant_id, limit=limit, every=every)
+    return ReactiveMobilityManager(tenant_id=tenant_id,
+                                   limit=limit,
+                                   every=every)

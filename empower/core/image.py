@@ -31,7 +31,7 @@ class Image(object):
         state_handlers: the list of state handlers supported by the vnf
     """
 
-    def __init__(self, nb_ports, vnf, state_handlers, handlers):
+    def __init__(self, vnf, nb_ports=1, state_handlers=[], handlers=[]):
 
         self.nb_ports = nb_ports
         self.vnf = vnf
@@ -63,6 +63,11 @@ class Image(object):
                 raise KeyError("state handler %s not found" % state_handler)
 
             self.state_handlers.append(state_handler)
+
+    def __eq__(self, other):
+        if isinstance(other, Image):
+            return self.vnf == other.vnf
+        return False
 
     def to_dict(self):
         """ Return a JSON-serializable dictionary representing the Poll """

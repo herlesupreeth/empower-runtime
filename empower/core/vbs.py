@@ -58,4 +58,6 @@ class VBS(BasePNFDev):
         out['cells'] = self.cells
         out['ran_sh_i'] = self.ran_sh_i
         out['cell_stats'] = self.cell_stats
+        out['enb_id'] = self.enb_id
+
         return out
