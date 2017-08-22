@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='configs.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\rconfigs.proto\x1a\x11ran_sharing.proto\"$\n\x14ue_rrc_meas_conf_req\x12\x0c\n\x04rnti\x18\x01 \x02(\r\"\xd7\x01\n\x0fue_capabilities\x12\x0c\n\x04\x62\x61nd\x18\x01 \x03(\r\x12\x14\n\x0crelease_3gpp\x18\x02 \x01(\r\x12\x18\n\x10interFreq_SI_acq\x18\x03 \x01(\x08\x12\x18\n\x10intraFreq_SI_acq\x18\x04 \x01(\x08\x12\x14\n\x0c\x41\x35_A4_events\x18\x05 \x01(\x08\x12\x16\n\x0einterFreq_meas\x18\x06 \x01(\x08\x12\x1e\n\x16intraFreq_ref_per_meas\x18\x07 \x01(\x08\x12\x1e\n\x16interFreq_ref_per_meas\x18\x08 \x01(\x08\"N\n\x10\x63\x65lls_to_measure\x12\x13\n\x0bphy_cell_id\x18\x01 \x01(\r\x12%\n\x0coffset_range\x18\x02 \x01(\x0e\x32\x0f.Q_offset_range\"?\n\x0f\x62lacklist_cells\x12\x11\n\tstart_pci\x18\x01 \x01(\r\x12\x19\n\x05range\x18\x02 \x01(\x0e\x32\n.pci_range\"\x90\x01\n\x0emeas_obj_EUTRA\x12\x14\n\x0c\x63\x61rrier_freq\x18\x01 \x01(\r\x12!\n\x07meas_bw\x18\x02 \x01(\x0e\x32\x10.allowed_meas_bw\x12 \n\x05\x63\x65lls\x18\x03 \x03(\x0b\x32\x11.cells_to_measure\x12#\n\tbkl_cells\x18\x04 \x03(\x0b\x32\x10.blacklist_cells\"Y\n\x0bmeas_object\x12\x14\n\tmeasObjId\x18\x01 \x02(\x05:\x01\x30\x12(\n\rmeasObj_EUTRA\x18\x02 \x01(\x0b\x32\x0f.meas_obj_EUTRAH\x00\x42\n\n\x08meas_obj\"6\n\x0crep_conf_per\x12&\n\x07purpose\x18\x01 \x01(\x0e\x32\x15.periodic_rep_purpose\">\n\x0fthreshold_EUTRA\x12\x0e\n\x04RSRP\x18\x01 \x01(\x05H\x00\x12\x0e\n\x04RSRQ\x18\x02 \x01(\x05H\x00\x42\x0b\n\tthreshold\"5\n\x0brep_conf_a1\x12&\n\x0c\x61\x31_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"5\n\x0brep_conf_a2\x12&\n\x0c\x61\x32_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"9\n\x0brep_conf_a3\x12\x11\n\ta3_offset\x18\x01 \x01(\x05\x12\x17\n\x0freport_on_leave\x18\x02 \x01(\r\"5\n\x0brep_conf_a4\x12&\n\x0c\x61\x34_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"_\n\x0brep_conf_a5\x12\'\n\ra5_threshold1\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\x12\'\n\ra5_threshold2\x18\x02 \x01(\x0b\x32\x10.threshold_EUTRA\"\xf1\x03\n\x0erep_conf_EUTRA\x12#\n\nperiodical\x18\x01 \x01(\x0b\x32\r.rep_conf_perH\x00\x12\x1a\n\x02\x61\x31\x18\x02 \x01(\x0b\x32\x0c.rep_conf_a1H\x00\x12\x1a\n\x02\x61\x32\x18\x03 \x01(\x0b\x32\x0c.rep_conf_a2H\x00\x12\x1a\n\x02\x61\x33\x18\x04 \x01(\x0b\x32\x0c.rep_conf_a3H\x00\x12\x1a\n\x02\x61\x34\x18\x05 \x01(\x0b\x32\x0c.rep_conf_a4H\x00\x12\x1a\n\x02\x61\x35\x18\x06 \x01(\x0b\x32\x0c.rep_conf_a5H\x00\x12\x12\n\nhysteresis\x18\x07 \x01(\x05\x12$\n\ntrigg_time\x18\x08 \x01(\x0e\x32\x10.time_to_trigger\x12&\n\x0btrigg_quant\x18\t \x01(\x0e\x32\x11.trigger_quantity\x12&\n\x0creport_quant\x18\n \x01(\x0e\x32\x10.report_quantity\x12\x15\n\rmax_rep_cells\x18\x0b \x01(\r\x12&\n\x0crep_interval\x18\x0c \x01(\x0e\x32\x10.report_interval\x12\"\n\nrep_amount\x18\r \x01(\x0e\x32\x0e.report_amount\x12\x33\n\x11ue_rxtx_time_diff\x18\x0e \x01(\x0e\x32\x18.ue_rxtx_time_differenceB\x0c\n\nconf_EUTRA\"Y\n\rreport_config\x12\x17\n\x0creportConfId\x18\x01 \x02(\x05:\x01\x30\x12#\n\x08rc_EUTRA\x18\x02 \x01(\x0b\x32\x0f.rep_conf_EUTRAH\x00\x42\n\n\x08rep_conf\"I\n\x0fmeas_identifier\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x12\n\nmeasObj_id\x18\x02 \x02(\x05\x12\x16\n\x0ereport_conf_id\x18\x03 \x02(\x05\"\xe8\x02\n\x15ue_rrc_meas_conf_repl\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12 \n\x06status\x18\x02 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0cue_rrc_state\x18\x03 \x01(\x0e\x32\n.rrc_state\x12(\n\rmeas_gap_patt\x18\x04 \x01(\x0e\x32\x11.meas_gap_pattern\x12!\n\x19meas_gap_config_sf_offset\x18\x05 \x01(\r\x12&\n\x0c\x63\x61pabilities\x18\x06 \x01(\x0b\x32\x10.ue_capabilities\x12\x1b\n\x05m_obj\x18\x07 \x03(\x0b\x32\x0c.meas_object\x12\x1e\n\x06r_conf\x18\x08 \x03(\x0b\x32\x0e.report_config\x12!\n\x07meas_id\x18\t \x03(\x0b\x32\x10.meas_identifier\x12\x0c\n\x04\x66req\x18\n \x01(\r\x12\x1a\n\x08pcell_DD\x18\x0b \x01(\x0e\x32\x08.DD_mode\"v\n\x10ue_rrc_meas_conf\x12$\n\x03req\x18\x01 \x01(\x0b\x32\x15.ue_rrc_meas_conf_reqH\x00\x12&\n\x04repl\x18\x02 \x01(\x0b\x32\x16.ue_rrc_meas_conf_replH\x00\x42\x14\n\x12ue_rrc_meas_conf_m\"\x1b\n\nues_id_req\x12\r\n\x05\x64ummy\x18\x01 \x01(\x05\"8\n\tactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\t\x12\x0f\n\x07plmn_id\x18\x03 \x02(\t\":\n\x0binactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\t\x12\x0f\n\x07plmn_id\x18\x03 \x02(\t\"w\n\x0bues_id_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0c\x61\x63tive_ue_id\x18\x02 \x03(\x0b\x32\n.active_ue\x12$\n\x0einactive_ue_id\x18\x03 \x03(\x0b\x32\x0c.inactive_ue\"N\n\x06ues_id\x12\x1a\n\x03req\x18\x01 \x01(\x0b\x32\x0b.ues_id_reqH\x00\x12\x1c\n\x04repl\x18\x02 \x01(\x0b\x32\x0c.ues_id_replH\x00\x42\n\n\x08ues_id_m\"\'\n\reNB_cells_req\x12\x16\n\x0e\x65nb_info_types\x18\x01 \x02(\r\"\xa6\x01\n\x10\x63\x65ll_information\x12\x14\n\x0cphys_cell_id\x18\x01 \x02(\r\x12\x14\n\x0c\x63\x61rrier_freq\x18\x02 \x02(\r\x12\x12\n\nnum_rbs_dl\x18\x03 \x01(\r\x12\x12\n\nnum_rbs_ul\x18\x04 \x01(\r\x12\x1e\n\x16res_alloc_type_supp_dl\x18\x05 \x03(\r\x12\x1e\n\x16res_alloc_type_supp_ul\x18\x06 \x03(\r\"Y\n\x15\x63\x65ll_ran_sharing_info\x12\x14\n\x0cphys_cell_id\x18\x01 \x02(\r\x12\x14\n\x0c\x61vail_rbs_dl\x18\x02 \x02(\r\x12\x14\n\x0c\x61vail_rbs_ul\x18\x03 \x02(\r\"\xf6\x01\n\x14\x65NB_ran_sharing_info\x12\x17\n\x0fsched_window_dl\x18\x01 \x02(\x04\x12\x17\n\x0fsched_window_ul\x18\x02 \x02(\x04\x12)\n\x0crbs_alloc_dl\x18\x03 \x03(\x0b\x32\x13.rbs_alloc_per_cell\x12)\n\x0crbs_alloc_ul\x18\x04 \x03(\x0b\x32\x13.rbs_alloc_per_cell\x12\x19\n\x11tenant_schedulers\x18\x05 \x03(\t\x12\x15\n\rue_schedulers\x18\x06 \x03(\t\x12$\n\x04\x63\x65ll\x18\x07 \x03(\x0b\x32\x16.cell_ran_sharing_info\"}\n\x0e\x65NB_cells_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x05\x63\x65lls\x18\x02 \x03(\x0b\x32\x11.cell_information\x12\'\n\x08ran_sh_i\x18\x03 \x01(\x0b\x32\x15.eNB_ran_sharing_info\"Z\n\teNB_cells\x12\x1d\n\x03req\x18\x01 \x01(\x0b\x32\x0e.eNB_cells_reqH\x00\x12\x1f\n\x04repl\x18\x02 \x01(\x0b\x32\x0f.eNB_cells_replH\x00\x42\r\n\x0b\x65NB_cells_m*9\n\x10meas_gap_pattern\x12\x0b\n\x07MGP_GP0\x10\x00\x12\x0b\n\x07MGP_GP1\x10\x01\x12\x0b\n\x07MGP_OFF\x10\x02*\x91\x01\n\trrc_state\x12\x13\n\x0fRS_RRC_INACTIVE\x10\x00\x12\x0f\n\x0bRS_RRC_IDLE\x10\x01\x12\x16\n\x12RS_RRC_SI_RECEIVED\x10\x02\x12\x14\n\x10RS_RRC_CONNECTED\x10\x03\x12\x17\n\x13RS_RRC_RECONFIGURED\x10\x04\x12\x17\n\x13RS_RRC_HO_EXECUTION\x10\x05*_\n\x0f\x61llowed_meas_bw\x12\n\n\x06\x41MBW_6\x10\x00\x12\x0b\n\x07\x41MBW_15\x10\x01\x12\x0b\n\x07\x41MBW_25\x10\x02\x12\x0b\n\x07\x41MBW_50\x10\x03\x12\x0b\n\x07\x41MBW_75\x10\x04\x12\x0c\n\x08\x41MBW_100\x10\x05*\xc2\x03\n\x0eQ_offset_range\x12\r\n\tQOR_dB_24\x10\x00\x12\r\n\tQOR_dB_22\x10\x01\x12\r\n\tQOR_dB_20\x10\x02\x12\r\n\tQOR_dB_18\x10\x03\x12\r\n\tQOR_dB_16\x10\x04\x12\r\n\tQOR_dB_14\x10\x05\x12\r\n\tQOR_dB_12\x10\x06\x12\r\n\tQOR_dB_10\x10\x07\x12\x0c\n\x08QOR_dB_8\x10\x08\x12\x0c\n\x08QOR_dB_6\x10\t\x12\x0c\n\x08QOR_dB_5\x10\n\x12\x0c\n\x08QOR_dB_4\x10\x0b\x12\x0c\n\x08QOR_dB_3\x10\x0c\x12\x0c\n\x08QOR_dB_2\x10\r\x12\x0c\n\x08QOR_dB_1\x10\x0e\x12\x0b\n\x07QOR_dB0\x10\x0f\x12\x0b\n\x07QOR_1dB\x10\x10\x12\x0b\n\x07QOR_2dB\x10\x11\x12\x0b\n\x07QOR_3dB\x10\x12\x12\x0b\n\x07QOR_4dB\x10\x13\x12\x0b\n\x07QOR_5dB\x10\x14\x12\x0b\n\x07QOR_6dB\x10\x15\x12\x0b\n\x07QOR_8dB\x10\x16\x12\x0c\n\x08QOR_10dB\x10\x17\x12\x0c\n\x08QOR_12dB\x10\x18\x12\x0c\n\x08QOR_14dB\x10\x19\x12\x0c\n\x08QOR_16dB\x10\x1a\x12\x0c\n\x08QOR_18dB\x10\x1b\x12\x0c\n\x08QOR_20dB\x10\x1c\x12\x0c\n\x08QOR_22dB\x10\x1d\x12\x0c\n\x08QOR_24dB\x10\x1e*\xf3\x01\n\tpci_range\x12\x0b\n\x07PCIR_n4\x10\x00\x12\x0b\n\x07PCIR_n8\x10\x01\x12\x0c\n\x08PCIR_n12\x10\x02\x12\x0c\n\x08PCIR_n16\x10\x03\x12\x0c\n\x08PCIR_n24\x10\x04\x12\x0c\n\x08PCIR_n32\x10\x05\x12\x0c\n\x08PCIR_n48\x10\x06\x12\x0c\n\x08PCIR_n64\x10\x07\x12\x0c\n\x08PCIR_n84\x10\x08\x12\x0c\n\x08PCIR_n96\x10\t\x12\r\n\tPCIR_n128\x10\n\x12\r\n\tPCIR_n168\x10\x0b\x12\r\n\tPCIR_n252\x10\x0c\x12\r\n\tPCIR_n504\x10\r\x12\x0f\n\x0bPCIR_spare2\x10\x0e\x12\x0f\n\x0bPCIR_spare1\x10\x0f*\xa0\x02\n\x0ftime_to_trigger\x12\r\n\tTTRIG_ms0\x10\x00\x12\x0e\n\nTTRIG_ms40\x10\x01\x12\x0e\n\nTTRIG_ms64\x10\x02\x12\x0e\n\nTTRIG_ms80\x10\x03\x12\x0f\n\x0bTTRIG_ms100\x10\x04\x12\x0f\n\x0bTTRIG_ms128\x10\x05\x12\x0f\n\x0bTTRIG_ms160\x10\x06\x12\x0f\n\x0bTTRIG_ms256\x10\x07\x12\x0f\n\x0bTTRIG_ms320\x10\x08\x12\x0f\n\x0bTTRIG_ms480\x10\t\x12\x0f\n\x0bTTRIG_ms512\x10\n\x12\x0f\n\x0bTTRIG_ms640\x10\x0b\x12\x10\n\x0cTTRIG_ms1024\x10\x0c\x12\x10\n\x0cTTRIG_ms1280\x10\r\x12\x10\n\x0cTTRIG_ms2560\x10\x0e\x12\x10\n\x0cTTRIG_ms5120\x10\x0f*S\n\x14periodic_rep_purpose\x12 \n\x1cPERRP_REPORT_STRONGEST_CELLS\x10\x00\x12\x19\n\x15PERRP_REPORT_CGI_INFO\x10\x01*2\n\x10trigger_quantity\x12\x0e\n\nTRIGQ_RSRP\x10\x00\x12\x0e\n\nTRIGQ_RSRQ\x10\x01*@\n\x0freport_quantity\x12\x1e\n\x1aREPQ_SAME_AS_TRIGGER_QUANT\x10\x00\x12\r\n\tREPQ_BOTH\x10\x01*\xb7\x02\n\x0freport_interval\x12\x10\n\x0cREPINT_ms120\x10\x00\x12\x10\n\x0cREPINT_ms240\x10\x01\x12\x10\n\x0cREPINT_ms480\x10\x02\x12\x10\n\x0cREPINT_ms640\x10\x03\x12\x11\n\rREPINT_ms1024\x10\x04\x12\x11\n\rREPINT_ms2048\x10\x05\x12\x11\n\rREPINT_ms5120\x10\x06\x12\x12\n\x0eREPINT_ms10240\x10\x07\x12\x0f\n\x0bREPINT_min1\x10\x08\x12\x0f\n\x0bREPINT_min6\x10\t\x12\x10\n\x0cREPINT_min12\x10\n\x12\x10\n\x0cREPINT_min30\x10\x0b\x12\x10\n\x0cREPINT_min60\x10\x0c\x12\x11\n\rREPINT_spare3\x10\r\x12\x11\n\rREPINT_spare2\x10\x0e\x12\x11\n\rREPINT_spare1\x10\x0f*\x89\x01\n\rreport_amount\x12\x0c\n\x08REPAMT_1\x10\x00\x12\x0c\n\x08REPAMT_2\x10\x01\x12\x0c\n\x08REPAMT_4\x10\x02\x12\x0c\n\x08REPAMT_8\x10\x03\x12\r\n\tREPAMT_16\x10\x04\x12\r\n\tREPAMT_32\x10\x05\x12\r\n\tREPAMT_64\x10\x06\x12\x13\n\x0fREPAMT_infinity\x10\x07*-\n\x17ue_rxtx_time_difference\x12\x12\n\x0eUERXTXTD_SETUP\x10\x00*#\n\x07\x44\x44_mode\x12\x0b\n\x07\x44\x44M_FDD\x10\x00\x12\x0b\n\x07\x44\x44M_TDD\x10\x01*7\n\x0f\x63onf_req_status\x12\x11\n\rCREQS_SUCCESS\x10\x00\x12\x11\n\rCREQS_FAILURE\x10\x01*D\n\x14\x65NB_cells_info_types\x12\x12\n\x0e\x45NB_CELLS_INFO\x10\x01\x12\x18\n\x14\x45NB_RAN_SHARING_INFO\x10\x02')
+  serialized_pb=_b('\n\rconfigs.proto\x1a\x11ran_sharing.proto\"$\n\x14ue_rrc_meas_conf_req\x12\x0c\n\x04rnti\x18\x01 \x02(\r\"\xd7\x01\n\x0fue_capabilities\x12\x0c\n\x04\x62\x61nd\x18\x01 \x03(\r\x12\x14\n\x0crelease_3gpp\x18\x02 \x01(\r\x12\x18\n\x10interFreq_SI_acq\x18\x03 \x01(\x08\x12\x18\n\x10intraFreq_SI_acq\x18\x04 \x01(\x08\x12\x14\n\x0c\x41\x35_A4_events\x18\x05 \x01(\x08\x12\x16\n\x0einterFreq_meas\x18\x06 \x01(\x08\x12\x1e\n\x16intraFreq_ref_per_meas\x18\x07 \x01(\x08\x12\x1e\n\x16interFreq_ref_per_meas\x18\x08 \x01(\x08\"N\n\x10\x63\x65lls_to_measure\x12\x13\n\x0bphy_cell_id\x18\x01 \x01(\r\x12%\n\x0coffset_range\x18\x02 \x01(\x0e\x32\x0f.Q_offset_range\"?\n\x0f\x62lacklist_cells\x12\x11\n\tstart_pci\x18\x01 \x01(\r\x12\x19\n\x05range\x18\x02 \x01(\x0e\x32\n.pci_range\"\x90\x01\n\x0emeas_obj_EUTRA\x12\x14\n\x0c\x63\x61rrier_freq\x18\x01 \x01(\r\x12!\n\x07meas_bw\x18\x02 \x01(\x0e\x32\x10.allowed_meas_bw\x12 \n\x05\x63\x65lls\x18\x03 \x03(\x0b\x32\x11.cells_to_measure\x12#\n\tbkl_cells\x18\x04 \x03(\x0b\x32\x10.blacklist_cells\"Y\n\x0bmeas_object\x12\x14\n\tmeasObjId\x18\x01 \x02(\x05:\x01\x30\x12(\n\rmeasObj_EUTRA\x18\x02 \x01(\x0b\x32\x0f.meas_obj_EUTRAH\x00\x42\n\n\x08meas_obj\"6\n\x0crep_conf_per\x12&\n\x07purpose\x18\x01 \x01(\x0e\x32\x15.periodic_rep_purpose\">\n\x0fthreshold_EUTRA\x12\x0e\n\x04RSRP\x18\x01 \x01(\x05H\x00\x12\x0e\n\x04RSRQ\x18\x02 \x01(\x05H\x00\x42\x0b\n\tthreshold\"5\n\x0brep_conf_a1\x12&\n\x0c\x61\x31_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"5\n\x0brep_conf_a2\x12&\n\x0c\x61\x32_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"9\n\x0brep_conf_a3\x12\x11\n\ta3_offset\x18\x01 \x01(\x05\x12\x17\n\x0freport_on_leave\x18\x02 \x01(\r\"5\n\x0brep_conf_a4\x12&\n\x0c\x61\x34_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"_\n\x0brep_conf_a5\x12\'\n\ra5_threshold1\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\x12\'\n\ra5_threshold2\x18\x02 \x01(\x0b\x32\x10.threshold_EUTRA\"\xf1\x03\n\x0erep_conf_EUTRA\x12#\n\nperiodical\x18\x01 \x01(\x0b\x32\r.rep_conf_perH\x00\x12\x1a\n\x02\x61\x31\x18\x02 \x01(\x0b\x32\x0c.rep_conf_a1H\x00\x12\x1a\n\x02\x61\x32\x18\x03 \x01(\x0b\x32\x0c.rep_conf_a2H\x00\x12\x1a\n\x02\x61\x33\x18\x04 \x01(\x0b\x32\x0c.rep_conf_a3H\x00\x12\x1a\n\x02\x61\x34\x18\x05 \x01(\x0b\x32\x0c.rep_conf_a4H\x00\x12\x1a\n\x02\x61\x35\x18\x06 \x01(\x0b\x32\x0c.rep_conf_a5H\x00\x12\x12\n\nhysteresis\x18\x07 \x01(\x05\x12$\n\ntrigg_time\x18\x08 \x01(\x0e\x32\x10.time_to_trigger\x12&\n\x0btrigg_quant\x18\t \x01(\x0e\x32\x11.trigger_quantity\x12&\n\x0creport_quant\x18\n \x01(\x0e\x32\x10.report_quantity\x12\x15\n\rmax_rep_cells\x18\x0b \x01(\r\x12&\n\x0crep_interval\x18\x0c \x01(\x0e\x32\x10.report_interval\x12\"\n\nrep_amount\x18\r \x01(\x0e\x32\x0e.report_amount\x12\x33\n\x11ue_rxtx_time_diff\x18\x0e \x01(\x0e\x32\x18.ue_rxtx_time_differenceB\x0c\n\nconf_EUTRA\"Y\n\rreport_config\x12\x17\n\x0creportConfId\x18\x01 \x02(\x05:\x01\x30\x12#\n\x08rc_EUTRA\x18\x02 \x01(\x0b\x32\x0f.rep_conf_EUTRAH\x00\x42\n\n\x08rep_conf\"I\n\x0fmeas_identifier\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x12\n\nmeasObj_id\x18\x02 \x02(\x05\x12\x16\n\x0ereport_conf_id\x18\x03 \x02(\x05\"\xe8\x02\n\x15ue_rrc_meas_conf_repl\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12 \n\x06status\x18\x02 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0cue_rrc_state\x18\x03 \x01(\x0e\x32\n.rrc_state\x12(\n\rmeas_gap_patt\x18\x04 \x01(\x0e\x32\x11.meas_gap_pattern\x12!\n\x19meas_gap_config_sf_offset\x18\x05 \x01(\r\x12&\n\x0c\x63\x61pabilities\x18\x06 \x01(\x0b\x32\x10.ue_capabilities\x12\x1b\n\x05m_obj\x18\x07 \x03(\x0b\x32\x0c.meas_object\x12\x1e\n\x06r_conf\x18\x08 \x03(\x0b\x32\x0e.report_config\x12!\n\x07meas_id\x18\t \x03(\x0b\x32\x10.meas_identifier\x12\x0c\n\x04\x66req\x18\n \x01(\r\x12\x1a\n\x08pcell_DD\x18\x0b \x01(\x0e\x32\x08.DD_mode\"v\n\x10ue_rrc_meas_conf\x12$\n\x03req\x18\x01 \x01(\x0b\x32\x15.ue_rrc_meas_conf_reqH\x00\x12&\n\x04repl\x18\x02 \x01(\x0b\x32\x16.ue_rrc_meas_conf_replH\x00\x42\x14\n\x12ue_rrc_meas_conf_m\"\x1b\n\nues_id_req\x12\r\n\x05\x64ummy\x18\x01 \x01(\x05\"8\n\tactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\t\x12\x0f\n\x07plmn_id\x18\x03 \x02(\t\":\n\x0binactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\t\x12\x0f\n\x07plmn_id\x18\x03 \x02(\t\"w\n\x0bues_id_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0c\x61\x63tive_ue_id\x18\x02 \x03(\x0b\x32\n.active_ue\x12$\n\x0einactive_ue_id\x18\x03 \x03(\x0b\x32\x0c.inactive_ue\"N\n\x06ues_id\x12\x1a\n\x03req\x18\x01 \x01(\x0b\x32\x0b.ues_id_reqH\x00\x12\x1c\n\x04repl\x18\x02 \x01(\x0b\x32\x0c.ues_id_replH\x00\x42\n\n\x08ues_id_m\"\'\n\reNB_cells_req\x12\x16\n\x0e\x65nb_info_types\x18\x01 \x02(\r\"\xa6\x01\n\x10\x63\x65ll_information\x12\x14\n\x0cphys_cell_id\x18\x01 \x02(\r\x12\x14\n\x0c\x63\x61rrier_freq\x18\x02 \x02(\r\x12\x12\n\nnum_rbs_dl\x18\x03 \x01(\r\x12\x12\n\nnum_rbs_ul\x18\x04 \x01(\r\x12\x1e\n\x16res_alloc_type_supp_dl\x18\x05 \x03(\r\x12\x1e\n\x16res_alloc_type_supp_ul\x18\x06 \x03(\r\"Y\n\x15\x63\x65ll_ran_sharing_info\x12\x14\n\x0cphys_cell_id\x18\x01 \x02(\r\x12\x14\n\x0c\x61vail_rbs_dl\x18\x02 \x02(\r\x12\x14\n\x0c\x61vail_rbs_ul\x18\x03 \x02(\r\"\xb4\x02\n\x14\x65NB_ran_sharing_info\x12\x17\n\x0fsched_window_dl\x18\x01 \x02(\x04\x12\x17\n\x0fsched_window_ul\x18\x02 \x02(\x04\x12)\n\x0crbs_alloc_dl\x18\x03 \x03(\x0b\x32\x13.rbs_alloc_per_cell\x12)\n\x0crbs_alloc_ul\x18\x04 \x03(\x0b\x32\x13.rbs_alloc_per_cell\x12\x1c\n\x14tenant_schedulers_dl\x18\x05 \x03(\t\x12\x18\n\x10ue_schedulers_dl\x18\x06 \x03(\t\x12\x1c\n\x14tenant_schedulers_ul\x18\x07 \x03(\t\x12\x18\n\x10ue_schedulers_ul\x18\x08 \x03(\t\x12$\n\x04\x63\x65ll\x18\t \x03(\x0b\x32\x16.cell_ran_sharing_info\"}\n\x0e\x65NB_cells_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x05\x63\x65lls\x18\x02 \x03(\x0b\x32\x11.cell_information\x12\'\n\x08ran_sh_i\x18\x03 \x01(\x0b\x32\x15.eNB_ran_sharing_info\"Z\n\teNB_cells\x12\x1d\n\x03req\x18\x01 \x01(\x0b\x32\x0e.eNB_cells_reqH\x00\x12\x1f\n\x04repl\x18\x02 \x01(\x0b\x32\x0f.eNB_cells_replH\x00\x42\r\n\x0b\x65NB_cells_m*9\n\x10meas_gap_pattern\x12\x0b\n\x07MGP_GP0\x10\x00\x12\x0b\n\x07MGP_GP1\x10\x01\x12\x0b\n\x07MGP_OFF\x10\x02*\x91\x01\n\trrc_state\x12\x13\n\x0fRS_RRC_INACTIVE\x10\x00\x12\x0f\n\x0bRS_RRC_IDLE\x10\x01\x12\x16\n\x12RS_RRC_SI_RECEIVED\x10\x02\x12\x14\n\x10RS_RRC_CONNECTED\x10\x03\x12\x17\n\x13RS_RRC_RECONFIGURED\x10\x04\x12\x17\n\x13RS_RRC_HO_EXECUTION\x10\x05*_\n\x0f\x61llowed_meas_bw\x12\n\n\x06\x41MBW_6\x10\x00\x12\x0b\n\x07\x41MBW_15\x10\x01\x12\x0b\n\x07\x41MBW_25\x10\x02\x12\x0b\n\x07\x41MBW_50\x10\x03\x12\x0b\n\x07\x41MBW_75\x10\x04\x12\x0c\n\x08\x41MBW_100\x10\x05*\xc2\x03\n\x0eQ_offset_range\x12\r\n\tQOR_dB_24\x10\x00\x12\r\n\tQOR_dB_22\x10\x01\x12\r\n\tQOR_dB_20\x10\x02\x12\r\n\tQOR_dB_18\x10\x03\x12\r\n\tQOR_dB_16\x10\x04\x12\r\n\tQOR_dB_14\x10\x05\x12\r\n\tQOR_dB_12\x10\x06\x12\r\n\tQOR_dB_10\x10\x07\x12\x0c\n\x08QOR_dB_8\x10\x08\x12\x0c\n\x08QOR_dB_6\x10\t\x12\x0c\n\x08QOR_dB_5\x10\n\x12\x0c\n\x08QOR_dB_4\x10\x0b\x12\x0c\n\x08QOR_dB_3\x10\x0c\x12\x0c\n\x08QOR_dB_2\x10\r\x12\x0c\n\x08QOR_dB_1\x10\x0e\x12\x0b\n\x07QOR_dB0\x10\x0f\x12\x0b\n\x07QOR_1dB\x10\x10\x12\x0b\n\x07QOR_2dB\x10\x11\x12\x0b\n\x07QOR_3dB\x10\x12\x12\x0b\n\x07QOR_4dB\x10\x13\x12\x0b\n\x07QOR_5dB\x10\x14\x12\x0b\n\x07QOR_6dB\x10\x15\x12\x0b\n\x07QOR_8dB\x10\x16\x12\x0c\n\x08QOR_10dB\x10\x17\x12\x0c\n\x08QOR_12dB\x10\x18\x12\x0c\n\x08QOR_14dB\x10\x19\x12\x0c\n\x08QOR_16dB\x10\x1a\x12\x0c\n\x08QOR_18dB\x10\x1b\x12\x0c\n\x08QOR_20dB\x10\x1c\x12\x0c\n\x08QOR_22dB\x10\x1d\x12\x0c\n\x08QOR_24dB\x10\x1e*\xf3\x01\n\tpci_range\x12\x0b\n\x07PCIR_n4\x10\x00\x12\x0b\n\x07PCIR_n8\x10\x01\x12\x0c\n\x08PCIR_n12\x10\x02\x12\x0c\n\x08PCIR_n16\x10\x03\x12\x0c\n\x08PCIR_n24\x10\x04\x12\x0c\n\x08PCIR_n32\x10\x05\x12\x0c\n\x08PCIR_n48\x10\x06\x12\x0c\n\x08PCIR_n64\x10\x07\x12\x0c\n\x08PCIR_n84\x10\x08\x12\x0c\n\x08PCIR_n96\x10\t\x12\r\n\tPCIR_n128\x10\n\x12\r\n\tPCIR_n168\x10\x0b\x12\r\n\tPCIR_n252\x10\x0c\x12\r\n\tPCIR_n504\x10\r\x12\x0f\n\x0bPCIR_spare2\x10\x0e\x12\x0f\n\x0bPCIR_spare1\x10\x0f*\xa0\x02\n\x0ftime_to_trigger\x12\r\n\tTTRIG_ms0\x10\x00\x12\x0e\n\nTTRIG_ms40\x10\x01\x12\x0e\n\nTTRIG_ms64\x10\x02\x12\x0e\n\nTTRIG_ms80\x10\x03\x12\x0f\n\x0bTTRIG_ms100\x10\x04\x12\x0f\n\x0bTTRIG_ms128\x10\x05\x12\x0f\n\x0bTTRIG_ms160\x10\x06\x12\x0f\n\x0bTTRIG_ms256\x10\x07\x12\x0f\n\x0bTTRIG_ms320\x10\x08\x12\x0f\n\x0bTTRIG_ms480\x10\t\x12\x0f\n\x0bTTRIG_ms512\x10\n\x12\x0f\n\x0bTTRIG_ms640\x10\x0b\x12\x10\n\x0cTTRIG_ms1024\x10\x0c\x12\x10\n\x0cTTRIG_ms1280\x10\r\x12\x10\n\x0cTTRIG_ms2560\x10\x0e\x12\x10\n\x0cTTRIG_ms5120\x10\x0f*S\n\x14periodic_rep_purpose\x12 \n\x1cPERRP_REPORT_STRONGEST_CELLS\x10\x00\x12\x19\n\x15PERRP_REPORT_CGI_INFO\x10\x01*2\n\x10trigger_quantity\x12\x0e\n\nTRIGQ_RSRP\x10\x00\x12\x0e\n\nTRIGQ_RSRQ\x10\x01*@\n\x0freport_quantity\x12\x1e\n\x1aREPQ_SAME_AS_TRIGGER_QUANT\x10\x00\x12\r\n\tREPQ_BOTH\x10\x01*\xb7\x02\n\x0freport_interval\x12\x10\n\x0cREPINT_ms120\x10\x00\x12\x10\n\x0cREPINT_ms240\x10\x01\x12\x10\n\x0cREPINT_ms480\x10\x02\x12\x10\n\x0cREPINT_ms640\x10\x03\x12\x11\n\rREPINT_ms1024\x10\x04\x12\x11\n\rREPINT_ms2048\x10\x05\x12\x11\n\rREPINT_ms5120\x10\x06\x12\x12\n\x0eREPINT_ms10240\x10\x07\x12\x0f\n\x0bREPINT_min1\x10\x08\x12\x0f\n\x0bREPINT_min6\x10\t\x12\x10\n\x0cREPINT_min12\x10\n\x12\x10\n\x0cREPINT_min30\x10\x0b\x12\x10\n\x0cREPINT_min60\x10\x0c\x12\x11\n\rREPINT_spare3\x10\r\x12\x11\n\rREPINT_spare2\x10\x0e\x12\x11\n\rREPINT_spare1\x10\x0f*\x89\x01\n\rreport_amount\x12\x0c\n\x08REPAMT_1\x10\x00\x12\x0c\n\x08REPAMT_2\x10\x01\x12\x0c\n\x08REPAMT_4\x10\x02\x12\x0c\n\x08REPAMT_8\x10\x03\x12\r\n\tREPAMT_16\x10\x04\x12\r\n\tREPAMT_32\x10\x05\x12\r\n\tREPAMT_64\x10\x06\x12\x13\n\x0fREPAMT_infinity\x10\x07*-\n\x17ue_rxtx_time_difference\x12\x12\n\x0eUERXTXTD_SETUP\x10\x00*#\n\x07\x44\x44_mode\x12\x0b\n\x07\x44\x44M_FDD\x10\x00\x12\x0b\n\x07\x44\x44M_TDD\x10\x01*7\n\x0f\x63onf_req_status\x12\x11\n\rCREQS_SUCCESS\x10\x00\x12\x11\n\rCREQS_FAILURE\x10\x01*D\n\x14\x65NB_cells_info_types\x12\x12\n\x0e\x45NB_CELLS_INFO\x10\x01\x12\x18\n\x14\x45NB_RAN_SHARING_INFO\x10\x02')
   ,
   dependencies=[ran__sharing__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -47,8 +47,8 @@ _MEAS_GAP_PATTERN = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3382,
-  serialized_end=3439,
+  serialized_start=3444,
+  serialized_end=3501,
 )
 _sym_db.RegisterEnumDescriptor(_MEAS_GAP_PATTERN)
 
@@ -86,8 +86,8 @@ _RRC_STATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3442,
-  serialized_end=3587,
+  serialized_start=3504,
+  serialized_end=3649,
 )
 _sym_db.RegisterEnumDescriptor(_RRC_STATE)
 
@@ -125,8 +125,8 @@ _ALLOWED_MEAS_BW = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3589,
-  serialized_end=3684,
+  serialized_start=3651,
+  serialized_end=3746,
 )
 _sym_db.RegisterEnumDescriptor(_ALLOWED_MEAS_BW)
 
@@ -264,8 +264,8 @@ _Q_OFFSET_RANGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3687,
-  serialized_end=4137,
+  serialized_start=3749,
+  serialized_end=4199,
 )
 _sym_db.RegisterEnumDescriptor(_Q_OFFSET_RANGE)
 
@@ -343,8 +343,8 @@ _PCI_RANGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4140,
-  serialized_end=4383,
+  serialized_start=4202,
+  serialized_end=4445,
 )
 _sym_db.RegisterEnumDescriptor(_PCI_RANGE)
 
@@ -422,8 +422,8 @@ _TIME_TO_TRIGGER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4386,
-  serialized_end=4674,
+  serialized_start=4448,
+  serialized_end=4736,
 )
 _sym_db.RegisterEnumDescriptor(_TIME_TO_TRIGGER)
 
@@ -445,8 +445,8 @@ _PERIODIC_REP_PURPOSE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4676,
-  serialized_end=4759,
+  serialized_start=4738,
+  serialized_end=4821,
 )
 _sym_db.RegisterEnumDescriptor(_PERIODIC_REP_PURPOSE)
 
@@ -468,8 +468,8 @@ _TRIGGER_QUANTITY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4761,
-  serialized_end=4811,
+  serialized_start=4823,
+  serialized_end=4873,
 )
 _sym_db.RegisterEnumDescriptor(_TRIGGER_QUANTITY)
 
@@ -491,8 +491,8 @@ _REPORT_QUANTITY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4813,
-  serialized_end=4877,
+  serialized_start=4875,
+  serialized_end=4939,
 )
 _sym_db.RegisterEnumDescriptor(_REPORT_QUANTITY)
 
@@ -570,8 +570,8 @@ _REPORT_INTERVAL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4880,
-  serialized_end=5191,
+  serialized_start=4942,
+  serialized_end=5253,
 )
 _sym_db.RegisterEnumDescriptor(_REPORT_INTERVAL)
 
@@ -617,8 +617,8 @@ _REPORT_AMOUNT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5194,
-  serialized_end=5331,
+  serialized_start=5256,
+  serialized_end=5393,
 )
 _sym_db.RegisterEnumDescriptor(_REPORT_AMOUNT)
 
@@ -636,8 +636,8 @@ _UE_RXTX_TIME_DIFFERENCE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5333,
-  serialized_end=5378,
+  serialized_start=5395,
+  serialized_end=5440,
 )
 _sym_db.RegisterEnumDescriptor(_UE_RXTX_TIME_DIFFERENCE)
 
@@ -659,8 +659,8 @@ _DD_MODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5380,
-  serialized_end=5415,
+  serialized_start=5442,
+  serialized_end=5477,
 )
 _sym_db.RegisterEnumDescriptor(_DD_MODE)
 
@@ -682,8 +682,8 @@ _CONF_REQ_STATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5417,
-  serialized_end=5472,
+  serialized_start=5479,
+  serialized_end=5534,
 )
 _sym_db.RegisterEnumDescriptor(_CONF_REQ_STATUS)
 
@@ -705,8 +705,8 @@ _ENB_CELLS_INFO_TYPES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5474,
-  serialized_end=5542,
+  serialized_start=5536,
+  serialized_end=5604,
 )
 _sym_db.RegisterEnumDescriptor(_ENB_CELLS_INFO_TYPES)
 
@@ -2088,22 +2088,36 @@ _ENB_RAN_SHARING_INFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='tenant_schedulers', full_name='eNB_ran_sharing_info.tenant_schedulers', index=4,
+      name='tenant_schedulers_dl', full_name='eNB_ran_sharing_info.tenant_schedulers_dl', index=4,
       number=5, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='ue_schedulers', full_name='eNB_ran_sharing_info.ue_schedulers', index=5,
+      name='ue_schedulers_dl', full_name='eNB_ran_sharing_info.ue_schedulers_dl', index=5,
       number=6, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cell', full_name='eNB_ran_sharing_info.cell', index=6,
-      number=7, type=11, cpp_type=10, label=3,
+      name='tenant_schedulers_ul', full_name='eNB_ran_sharing_info.tenant_schedulers_ul', index=6,
+      number=7, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='ue_schedulers_ul', full_name='eNB_ran_sharing_info.ue_schedulers_ul', index=7,
+      number=8, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cell', full_name='eNB_ran_sharing_info.cell', index=8,
+      number=9, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -2121,7 +2135,7 @@ _ENB_RAN_SHARING_INFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=2915,
-  serialized_end=3161,
+  serialized_end=3223,
 )
 
 
@@ -2165,8 +2179,8 @@ _ENB_CELLS_REPL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3163,
-  serialized_end=3288,
+  serialized_start=3225,
+  serialized_end=3350,
 )
 
 
@@ -2206,8 +2220,8 @@ _ENB_CELLS = _descriptor.Descriptor(
       name='eNB_cells_m', full_name='eNB_cells.eNB_cells_m',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=3290,
-  serialized_end=3380,
+  serialized_start=3352,
+  serialized_end=3442,
 )
 
 _CELLS_TO_MEASURE.fields_by_name['offset_range'].enum_type = _Q_OFFSET_RANGE
