@@ -31,6 +31,7 @@ from empower.vbsp.vbspconnection import create_header
 from empower.core.utils import ether_to_hex
 from empower.events.vbsdown import vbsdown
 from empower.main import RUNTIME
+import empower.logger
 
 
 class VBSCellStats(ModuleTrigger):
@@ -158,6 +159,9 @@ class VBSCellStats(ModuleTrigger):
 
         if "prb_utilz" in stats:
             vbs.cell_stats[self.cell] = stats["prb_utilz"]
+            # self.log.info("DL PRB utilization: num PRBs %s perc. PRBs %s",
+            #          stats["prb_utilz"]["dl_prb_utilz"]["num_prbs"],
+            #          stats["prb_utilz"]["dl_prb_utilz"]["perc_prbs"])
 
     def __eq__(self, other):
 

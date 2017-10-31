@@ -176,6 +176,9 @@ class Busyness(Module):
         self.busyness = response.busyness / 180.0
         self.block.busyness = response.busyness / 180.0
 
+        # self.log.info("Air time utiliz: WTP %s Block Busyness %s",
+        #               self.block.addr, self.block.busyness)
+
         # call callback
         self.handle_callback(self)
 

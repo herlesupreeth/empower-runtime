@@ -27,6 +27,7 @@ from empower.events.wtpup import wtpup
 from empower.events.wtpdown import wtpdown
 from empower.events.vbsup import vbsup
 from empower.events.vbsdown import vbsdown
+import empower.logger
 
 from empower.main import RUNTIME
 
@@ -153,6 +154,9 @@ class SignalGraph(EmpowerApp):
         lvaps = RUNTIME.tenants[self.tenant.tenant_id].lvaps
 
         for addr in poller.maps.values():
+
+            # self.log.info("WIFI RSSI: WTP %s Station %s RSSI %s",
+            #           poller.block.addr, addr['addr'], addr['mov_rssi'])
 
             if addr['addr'] in lvaps and lvaps[addr['addr']].wtp:
                 active_flag = 1

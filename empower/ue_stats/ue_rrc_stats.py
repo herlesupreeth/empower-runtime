@@ -37,6 +37,7 @@ from empower.vbsp import PRT_UE_LEAVE
 from empower.vbsp.vbspconnection import create_header
 from empower.core.utils import ether_to_hex
 from empower.core.app import EmpowerApp
+import empower.logger
 
 from empower.main import RUNTIME
 
@@ -200,6 +201,12 @@ class UERRCStats(ModuleTrigger):
 
         if "PCell_rsrq" in meas:
             ue.pcell_rsrq = meas["PCell_rsrq"]
+
+        # if "PCell_rsrp" in meas and "PCell_rsrq" in meas:
+        #     self.log.info("UE measurements: UE ID %s RSRP %s RSRQ %s",
+        #              ue.addr,
+        #              meas["PCell_rsrp"],
+        #              meas["PCell_rsrq"])
 
         if "neigh_meas" in meas:
 
