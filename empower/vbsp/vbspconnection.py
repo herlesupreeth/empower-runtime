@@ -287,7 +287,7 @@ class VBSPConnection(object):
                 active_ues[addr] = {}
                 active_ues[addr]["addr"] = addr
                 active_ues[addr]["rnti"] = ue["rnti"]
-                if "imsi" in ue:
+                if "imsi" in ue and len(ue["imsi"]) != 0:
                     active_ues[addr]["imsi"] = int(ue["imsi"])
                 if "plmn_id" in ue:
                     active_ues[addr]["plmn_id"] = ue["plmn_id"]
@@ -299,7 +299,7 @@ class VBSPConnection(object):
                 inactive_ues[addr] = {}
                 inactive_ues[addr]["addr"] = addr
                 inactive_ues[addr]["rnti"] = ue["rnti"]
-                if "imsi" in ue:
+                if "imsi" in ue and len(ue["imsi"]) != 0:
                     inactive_ues[addr]["imsi"] = int(ue["imsi"])
                 if "plmn_id" in ue:
                     inactive_ues[addr]["plmn_id"] = ue["plmn_id"]
