@@ -141,6 +141,7 @@
 
       <table id="ues" class="dump">
         <tr>
+          <th width="150px">UE ID</th>
           <th width="150px">VBS</th>
           <th width="150px">IMSI</th>
           <th width="150px">PLMN ID</th>
@@ -162,6 +163,53 @@
 
     </div>
 
+    </div>
+
+    <div id="tenantRANShareSidenav" class="sidenav">
+      <div class="container-fluid">
+        <p id="tenantRANShareVBSAddr" class="hidden"></p>
+        <ul id="tRANShareTabs" class="nav nav-tabs">
+          <li class="active">
+            <a href="#UESchedSelect" data-toggle="tab">UE Scheduler</a>
+          </li>
+          <li>
+            <a href="#RBSReq" data-toggle="tab">Resource Blocks</a>
+          </li>
+        </ul>
+
+        <div class="tab-content ">
+          <div class="tab-pane active" id="UESchedSelect">
+            <div class="row" id="selectBoxRow">
+
+              <div class="col-xs-2" id="divLabel">
+                <label for="UESchedDLSelect">Select UE DL scheduler:</label>
+              </div>
+
+              <div class="col-xs-3">
+                <select class="form-control" data-width="auto" id="UESchedDLSelect">
+                  <option selected value> --- Select an option --- </option>
+                </select>
+              </div>
+
+              <div class="col-xs-2" id="divLabel">
+                <label for="UESchedULSelect">Select UE UL scheduler:</label>
+              </div>
+
+              <div class="col-xs-3">
+                <select class="form-control" data-width="auto" id="UESchedULSelect">
+                  <option selected value> --- Select an option --- </option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+          <div class="tab-pane" id="RBSReq">
+            <h3>Under Development</h3>
+          </div>
+          <button type="submit" class="btn btn-primary hidden rbsAllocModButton" onclick="modTenantRANShareInfo()"> Apply </button>
+          <button type="submit" class="btn btn-primary" onclick="closeRANShareCtrlNav()"> Close </button>
+        </div>
+      </div>
     </div>
 
 {% end %}

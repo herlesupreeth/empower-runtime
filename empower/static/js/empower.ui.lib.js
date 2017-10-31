@@ -1588,7 +1588,7 @@ function loadUEs(tenant_id) {
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
                 var mac = row.insertCell(0);
-                mac.colSpan = 4
+                mac.colSpan = 5
                 mac.style.textAlign = "center"
                 mac.innerHTML = "No UEs available"
             }
@@ -1596,8 +1596,10 @@ function loadUEs(tenant_id) {
                 var table = document.getElementById('ues');
                 var row = table.insertRow(table.rows.length);
                 var c = 0
+                var ue_id = row.insertCell(c++);
+                ue_id.innerHTML = data[stream].addr
                 var vbs = row.insertCell(c++);
-                vbs.innerHTML = data[stream].vbs
+                vbs.innerHTML = data[stream].vbs.addr
                 var imsi = row.insertCell(c++);
                 imsi.innerHTML = data[stream].imsi
                 var plmn_id = row.insertCell(c++);
@@ -1929,109 +1931,101 @@ function loadVBSes(tenant_id) {
                     vbsCtrl.width = "24px"
                     vbsCtrl.align = "center"
                     vbsCtrl.innerHTML = "<a href=\"#\" onClick=\"openRBSAllocNav('" + data[stream].addr + "')\"><img width=\"24\" src=\"/static/images/edit.png\" /></a>"
+                } else if (tenant_id && data[stream].ran_sh_i) {
+                    var vbsCtrl = row.insertCell(c++);
+                    vbsCtrl.id = "ctrl_" + data[stream].addr
+                    vbsCtrl.width = "24px"
+                    vbsCtrl.align = "center"
+                    vbsCtrl.innerHTML = "<a href=\"#\" onClick=\"openRANShareCtrlNav('" + data[stream].addr + "')\"><img width=\"24\" src=\"/static/images/edit.png\" /></a>"
                 }
             }
         },
     });
 }
 
-function modRBSAlloc() {
+var tRANSharingTimeout;
 
-    var s_cell = $("#cellSelect :selected").val();
-    if (s_cell === "") {
-        alert("Cell not selected");
-        return;
-    }
-
-    var table = document.getElementById("rbsAllocTable");
-
-    var data = new Object();
-    data.version = "1.0";
-    data.operation = "static_t_alloc_DL";
-
-    var params = new Object();
-
-    var rbs_alloc_dl = new Object();
-    rbs_alloc_dl.phy_cell_id = parseInt(s_cell);
-    rbs_alloc_dl.sf = []
-
-    var rowCount = table.rows.length;
-    // All rows will have same column count
-    var colCount = table.rows[0].cells.length;
-
-    for (var sf = 0; sf < colCount - 1; sf++) {
-        var sf_alloc = new Object();
-        sf_alloc.rbs_alloc = []
-        for (var rb = 0; rb < rowCount - 1; rb++) {
-            var val = $("#" + "SF" + sf + "RB" + rb).val();
-            if (val === null || val === "") {
-                sf_alloc.rbs_alloc.push("0");
-            } else {
-                sf_alloc.rbs_alloc.push(val);
-            }
-        }
-        rbs_alloc_dl.sf.push(sf_alloc)
-    }
-
-    params.rbs_alloc_dl = rbs_alloc_dl
-
-    data.params = params;
-
-    var vbs_id = document.getElementById("RBSAllocVBSAddr").text;
-
-    if (vbs_id === null || vbs_id === "") {
-        alert("Unknown VBS");
-        return;
-    }
-
-    url = "/api/v1/vbses/" + vbs_id + "/ran_sharing";
-
-    $.ajax({
-        url: url,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        cache: false,
-        beforeSend: function (request) {
-            request.setRequestHeader("Authorization", BASE_AUTH);
-        },
-        statusCode: {
-            201: function (data) {
-
-            },
-            400: function () {
-                alert('Failure');
-            },
-            409: function () {
-                alert('Failure');
-            },
-            500: function () {
-                alert('Failure');
-            }
-        }
-    });
+function openRANShareCtrlNav(vbs) {
+    // Show the RAN sharing controlling element
+    document.getElementById("tenantRANShareSidenav").style.width = "100%";
+    // Populate UE schedulers list and RBS request by the tenant
+    tenantRANSharingControl(vbs);
+    // Set VBS address
+    document.getElementById("tenantRANShareVBSAddr").text = vbs;
 }
+
+function closeRANShareCtrlNav() {
+
+    clearTimeout(tRANSharingTimeout);
+    // document.getElementById("rbsAllocTable").innerHTML = "";
+    // $("#cellSelect").val("");
+    // Hide the RAN sharing controlling element
+    document.getElementById("tenantRANShareSidenav").style.width = "0";
+}
+
+function tenantRANSharingControl(vbs) {
+    // Fetch tenants information
+    tRANSharingTimeout = setTimeout(function () {
+        $.ajax({
+            url: '/api/v1/tenants',
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+
+                vbs_data = null;
+
+                for (var t in data) {
+                    for (var v in data[t].vbses) {
+                        if (vbs == data[t].vbses[v].addr &&
+                            data[t].plmn_id != "") {
+                            vbs_data = data[t].vbses[v];
+                        }
+                    }
+                }
+
+                var active_tab = $("#tRANShareTabs").index();
+
+                if (active_tab == 1 && vbs_data && vbs_data.ran_sh_i) {
+                    loadUESchedSelectBox(vbs_data);
+                }
+            },
+        });
+
+        tenantRANSharingControl(vbs);
+
+    }, 1000);
+}
+
+function modTenantRANShareInfos() {
+
+}
+
+
+
+var rbsAllocTimeout;
 
 function openRBSAllocNav(vbs) {
     // Show the RAN sharing controlling element
     document.getElementById("RBSAllocSidenav").style.width = "100%";
     // Populate RBS allocation table
-    ranSharingControl(vbs);
+    rbsAllocControl(vbs);
     // Set VBS address
     document.getElementById("RBSAllocVBSAddr").text = vbs;
 }
 
 function closeRBSAllocNav() {
 
+    clearTimeout(rbsAllocTimeout);
     document.getElementById("rbsAllocTable").innerHTML = "";
     $("#cellSelect").val("");
     // Hide the RAN sharing controlling element
     document.getElementById("RBSAllocSidenav").style.width = "0";
 }
 
-function ranSharingControl(vbs) {
+function rbsAllocControl(vbs) {
     // Fetch tenants information
-    setTimeout(function () {
+    rbsAllocTimeout = setTimeout(function () {
         $.ajax({
             url: '/api/v1/tenants',
             type: 'GET',
@@ -2062,7 +2056,7 @@ function ranSharingControl(vbs) {
             },
         });
 
-        ranSharingControl(vbs);
+        rbsAllocControl(vbs);
 
     }, 1000);
 }
@@ -2246,6 +2240,83 @@ function loadCellSelectBox(vbs) {
             selectCellMenu.append("<option value= "+ cell +">" + cell + "</option>");
         });
     }
+}
+
+function modRBSAlloc() {
+
+    var s_cell = $("#cellSelect :selected").val();
+    if (s_cell === "") {
+        alert("Cell not selected");
+        return;
+    }
+
+    var table = document.getElementById("rbsAllocTable");
+
+    var data = new Object();
+    data.version = "1.0";
+    data.operation = "static_t_alloc_DL";
+
+    var params = new Object();
+
+    var rbs_alloc_dl = new Object();
+    rbs_alloc_dl.phy_cell_id = parseInt(s_cell);
+    rbs_alloc_dl.sf = []
+
+    var rowCount = table.rows.length;
+    // All rows will have same column count
+    var colCount = table.rows[0].cells.length;
+
+    for (var sf = 0; sf < colCount - 1; sf++) {
+        var sf_alloc = new Object();
+        sf_alloc.rbs_alloc = []
+        for (var rb = 0; rb < rowCount - 1; rb++) {
+            var val = $("#" + "SF" + sf + "RB" + rb).val();
+            if (val === null || val === "") {
+                sf_alloc.rbs_alloc.push("0");
+            } else {
+                sf_alloc.rbs_alloc.push(val);
+            }
+        }
+        rbs_alloc_dl.sf.push(sf_alloc)
+    }
+
+    params.rbs_alloc_dl = rbs_alloc_dl
+
+    data.params = params;
+
+    var vbs_id = document.getElementById("RBSAllocVBSAddr").text;
+
+    if (vbs_id === null || vbs_id === "") {
+        alert("Unknown VBS");
+        return;
+    }
+
+    url = "/api/v1/vbses/" + vbs_id + "/ran_sharing";
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        cache: false,
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", BASE_AUTH);
+        },
+        statusCode: {
+            201: function (data) {
+
+            },
+            400: function () {
+                alert('Failure');
+            },
+            409: function () {
+                alert('Failure');
+            },
+            500: function () {
+                alert('Failure');
+            }
+        }
+    });
 }
 
 function removeVNSP(mac, tenant_id) {
